@@ -1,13 +1,13 @@
 import PageNav from "../components/PageNav";
 import styles from "./Login.module.css";
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Field, Form, Formik } from "formik";
+import {useNavigate} from "react-router-dom";
+import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { StyledTextField, StyledButton } from "../components/styledComp";
+import {StyledTextField, StyledButton} from "../components/styledComp";
 import AuthService from "../services/AuthService";
 
 function Login() {
@@ -20,17 +20,20 @@ function Login() {
 
   const handleLogin = async (values, actions) => {
     try {
+      console.log('Login values:');
+      console.log(values.username + " " + values.password);
       await AuthService.login(values.username, values.password);
-      navigate("/overview"); // aici sa se duca pt pacient/medic
+      navigate("/overview"); // Redirect after successful login
       window.location.reload();
     } catch (error) {
+      console.error("Login failed", error);
       actions.setFieldError("general", "Username or password is incorrect");
     }
   };
 
   return (
     <main className={styles.login}>
-      <PageNav />
+      <PageNav/>
       <Box
         display="flex"
         justifyContent="center"
@@ -47,7 +50,7 @@ function Login() {
           }}
         >
           <Formik
-            initialValues={{ username: "", password: "" }}
+            initialValues={{username: "", password: ""}}
             validationSchema={validationSchema}
             onSubmit={handleLogin}
           >
@@ -70,7 +73,7 @@ function Login() {
                     Introdu datele pentru a te loga
                   </Typography>
                   <Field
-                    sx={{ width: 400 }}
+                    sx={{width: 400}}
                     as={StyledTextField}
                     required
                     label="Username"
@@ -86,7 +89,7 @@ function Login() {
                     onChange={props.handleChange}
                   />
                   <Field
-                    sx={{ width: 400 }}
+                    sx={{width: 400}}
                     as={StyledTextField}
                     required
                     label="Parola"
@@ -101,11 +104,11 @@ function Login() {
                     onBlur={props.handleBlur}
                     onChange={props.handleChange}
                   />
-                  <StyledButton onClick={handleLogin}>Log in</StyledButton>
+                  <StyledButton type="submit">Log in</StyledButton>
                   {props.errors.general && (
                     <Typography
                       variant="body2"
-                      style={{ color: "red", marginTop: "1em" }}
+                      style={{color: "red", marginTop: "1em"}}
                     >
                       {props.errors.general}
                     </Typography>
@@ -121,101 +124,3 @@ function Login() {
 }
 
 export default Login;
-
-/* import PageNav from "../components/PageNav";
-import styles from "./Login.module.css";
-import { useState } from "react";
-import * as React from "react";
-import Button from "@mui/material/Button";
-import { Navigate } from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import AuthService from "../services/AuthService";
-
-export default function Login() {
-  const [username, setUsername] = useState("username client");
-  const [password, setPassword] = useState("client");
-  const [message, setMessage] = useState("");
-  const [usernameErr, setUsernameErr] = useState(false);
-  const [passwordErr, setPasswordErr] = useState(false);
-  const [loginErr, setLoginErr] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setUsernameErr(false);
-    setPasswordErr(false);
-    setLoginErr(false);
-
-    await AuthService.login(username, password).then(
-      () => {
-        Navigate("/verificare");
-        window.location.reload();
-      },
-      () => {
-        setMessage("Username sau parola gresite");
-        setUsernameErr(true);
-        setPasswordErr(true);
-        setLoginErr(true);
-      }
-    );
-  };
-
-  const resetLoginErr = () => {
-    if (loginErr) {
-      setLoginErr(false);
-      setUsernameErr(false);
-      setPasswordErr(false);
-    }
-  };
-
-  React.useEffect(() => {
-    AuthService.logout();
-  }, []);
-
-  return (
-    <main className={styles.login}>
-      <PageNav />
-      <form className={styles.form}>
-        <div className={styles.row}>
-          <label htmlFor="username">Username</label>
-          <input
-            type="username"
-            id="username"
-            onChange={(e) => {
-              setUsername(e.target.value);
-              resetLoginErr();
-            }}
-            error={usernameErr}
-            value={username}
-          />
-        </div>
-
-        <div className={styles.row}>
-          <label htmlFor="password">Parola</label>
-          <input
-            type="password"
-            id="password"
-            onChange={(e) => {
-              setPassword(e.target.value);
-              resetLoginErr();
-            }}
-            error={passwordErr}
-            value={password}
-          />
-        </div>
-
-        <Button variant="contained" type="submit" onClick={handleSubmit}>
-          Log in
-        </Button>
-        {loginErr && (
-          <Typography
-            variant="body2"
-            style={{ color: "red", marginTop: "1em" }}
-          >
-            {message}
-          </Typography>
-        )}
-      </form>
-    </main>
-  );
-} */

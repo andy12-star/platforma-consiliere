@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080";
+const API_URL = "https://localhost:8081";
 
 class AuthService {
   async login(username, password) {
     try {
-      const response = await axios.post(`${API_URL}/authenticate`, {
+      const response = await axios.post(`${API_URL}/api/v1/auth/login`, {
         username,
         password,
       });
