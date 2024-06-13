@@ -1,0 +1,40 @@
+.overview {
+  height: calc(100vh - 5rem);
+  margin: 2.5rem;
+  background-image: url("/public/bg_user1.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 2.5rem 5rem;
+}
+
+.overview section {
+  display: flex;
+  flex-direction: column;
+  height: 55%;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.overview h1 {
+  font-size: 5rem;
+  line-height: 1.3;
+  font-family: "Times New Roman", sans-serif;
+}
+
+.overview container {
+  display: flex;
+  align-items: center;
+  height: 20vh;
+  /*background-color: rgba(183, 204, 237, 0.244);*/
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.overview h2 {
+  width: 90%;
+  font-size: 1.9rem;
+  color: var(--color-light--1);
+}
