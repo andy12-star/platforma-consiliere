@@ -8,34 +8,6 @@ const PacientDetails = () => {
   const location = useLocation();
   const { patient } = location.state;
 
-  if (!patient) {
-    return (
-      <main className={styles.mainPage}>
-        <UserNav />
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          textAlign="center"
-          sx={{ minHeight: "92vh", p: 1 }}
-        >
-          <Container maxWidth="xl">
-            <Typography
-              variant="h2"
-              marginBottom={2}
-              sx={{
-                fontWeight: "bold",
-                fontFamily: "Times New Roman, Times, serif",
-              }}
-            >
-              Patient not found
-            </Typography>
-          </Container>
-        </Box>
-      </main>
-    );
-  }
-
   const calculateAge = (birthDate) => {
     const today = new Date();
     const birthDateObj = new Date(birthDate);
@@ -58,7 +30,7 @@ const PacientDetails = () => {
         flexDirection="column"
         alignItems="center"
         textAlign="center"
-        sx={{ minHeight: "92vh", bgcolor: "#E1EBEE", p: 1 }}
+        sx={{ minHeight: "92vh", p: 1 }}
       >
         <Container maxWidth="xl">
           <Typography

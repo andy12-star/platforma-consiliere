@@ -65,7 +65,7 @@ const Pacienti = () => {
         flexDirection="column"
         alignItems="center"
         textAlign="center"
-        sx={{ minHeight: "92vh", bgcolor: "#E1EBEE", p: 1 }}
+        sx={{ minHeight: "92vh", p: 1 }}
       >
         <Container maxWidth="xl">
           <Box

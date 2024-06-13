@@ -20,7 +20,6 @@ import ListItemText from "@mui/material/ListItemText";
 
 const dosarMedicalPages = ["RapoarteConsultatie", "RezultateTeste"];
 const testPages = ["Test personalitate", "Test SMI", "Test YSQ"];
-const settings = ["Profil", "Logout"];
 
 function UserNav() {
   const navigate = useNavigate();
@@ -30,6 +29,10 @@ function UserNav() {
 
   const handleNavItemClick = (page) => {
     navigate(`/${page.toLowerCase().replace(" ", "")}`);
+  };
+
+  const handleLogout = () => {
+    navigate("/");
   };
 
   const handleOpenDosarMenu = (event) => {
@@ -177,7 +180,7 @@ function UserNav() {
             <Typography variant="h6" component="div" sx={{ color: "black" }}>
               {clientName}
             </Typography>
-            <Tooltip title="Open settings">
+            <Tooltip>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   sx={{
@@ -207,19 +210,26 @@ function UserNav() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => {
-                    handleNavItemClick(setting);
-                    handleCloseUserMenu();
-                  }}
-                >
-                  <Typography textAlign="center" sx={{ fontSize: "18px" }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                onClick={() => {
+                  handleNavItemClick("profil");
+                  handleCloseUserMenu();
+                }}
+              >
+                <Typography textAlign="center" sx={{ fontSize: "18px" }}>
+                  Profil
+                </Typography>
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleLogout();
+                  handleCloseUserMenu();
+                }}
+              >
+                <Typography textAlign="center" sx={{ fontSize: "18px" }}>
+                  Logout
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </li>
