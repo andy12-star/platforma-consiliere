@@ -21,6 +21,8 @@ import Profil from "./pages/Profil";
 import Pacienti from "./pages/Pacienti";
 import Rapoarte from "./pages/Rapoarte";
 import PatientDetails from "./pages/PacientDetails";
+import ModifyAppt from "./pages/ModifyAppt";
+import ModifyConsult from "./pages/ModifyConsult";
 
 function App() {
   return (
@@ -49,6 +51,8 @@ function App() {
             <Route path="pacienti" element={<Pacienti />} />
             <Route path="rapoarte" element={<Rapoarte />} />
             <Route path="/patient-details/:id" element={<PatientDetails />} />
+            <Route path="/modifica-programare" element={<ModifyAppt />} />
+            <Route path="/modifica-consultatie" element={<ModifyConsult />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

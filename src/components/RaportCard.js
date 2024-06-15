@@ -11,12 +11,15 @@ import {
   TextField,
 } from "@mui/material";
 import { StyledButton } from "./styledComp";
+import { useNavigate } from "react-router-dom";
+import consulationServiceInstance from "../services/consultation.service";
 
-const RaportCard = ({ name, date, details }) => {
+const RaportCard = ({ appointment }) => {
   const [open, setOpen] = useState(false);
   const [newTime, setNewTime] = useState("");
   const [newRecommandation, setNewRecommandation] = useState("");
   const [newObservation, setNewObservation] = useState("");
+  const navigate = useNavigate();
 
   const handleTimeChange = (e) => {
     setNewTime(e.target.value);
@@ -37,6 +40,39 @@ const RaportCard = ({ name, date, details }) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleAddDetails = async () => {
+    const consultationData = {
+      id: appointment.id,
+      duration: newTime,
+      observation: newObservation,
+      recommendation: newRecommandation,
+    };
+    try {
+      await consulationServiceInstance.addConsultationReport(consultationData);
+      setOpen(false);
+      // You might want to update the local state or refetch the appointments to reflect the changes
+    } catch (error) {
+      console.error("Failed to add consultation report", error);
+    }
+  };
+
+  const handleModifyDetails = () => {
+    navigate("/modifica-consultatie", {
+      state: { appointment },
+    });
+  };
+
+  const handleDeleteAppointment = async () => {
+    try {
+      await consulationServiceInstance.deleteConsultationReport(appointment.id);
+      // You might want to update the local state or refetch the appointments to reflect the changes
+      console.log("Appointment deleted:", appointment.id);
+    } catch (error) {
+      console.error("Failed to delete appointment", error);
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -68,28 +104,57 @@ const RaportCard = ({ name, date, details }) => {
               mt: 4,
             }}
           >
-            {name}
+            {appointment.name}
           </Typography>
         </Box>
         <Box marginTop={2}>
           <Typography variant="h5" color="text.secondary">
             DATA CONSULTATIEI
           </Typography>
-          <Typography variant="h6">{date}</Typography>
+          <Typography variant="h6">{appointment.date}</Typography>
         </Box>
-        <StyledButton
-          fullWidth
-          onClick={handleClickOpen}
-          variant="contained"
-          sx={{
-            marginTop: 4,
-            textTransform: "none",
-            fontSize: "18px",
-            "&:hover": { bgcolor: "#FF6347" },
-          }}
-        >
-          Adauga detalii consultatie
-        </StyledButton>
+        {appointment.details ? (
+          <>
+            <StyledButton
+              fullWidth
+              onClick={handleModifyDetails}
+              variant="contained"
+              sx={{
+                marginTop: 4,
+                textTransform: "none",
+                fontSize: "18px",
+              }}
+            >
+              Modifica Detalii Consultatie
+            </StyledButton>
+            <StyledButton
+              fullWidth
+              onClick={handleDeleteAppointment}
+              variant="contained"
+              color="error"
+              sx={{
+                marginTop: 4,
+                textTransform: "none",
+                fontSize: "18px",
+              }}
+            >
+              Sterge Consultatie
+            </StyledButton>
+          </>
+        ) : (
+          <StyledButton
+            fullWidth
+            onClick={handleClickOpen}
+            variant="contained"
+            sx={{
+              marginTop: 4,
+              textTransform: "none",
+              fontSize: "18px",
+            }}
+          >
+            Adauga Detalii Consultatie
+          </StyledButton>
+        )}
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
           <DialogTitle
             sx={{
@@ -157,7 +222,11 @@ const RaportCard = ({ name, date, details }) => {
             >
               Cancel
             </StyledButton>
-            <StyledButton color="primary" sx={{ fontSize: "1.5rem" }}>
+            <StyledButton
+              color="primary"
+              sx={{ fontSize: "1.5rem" }}
+              onClick={handleAddDetails}
+            >
               Adauga
             </StyledButton>
           </DialogActions>

@@ -108,7 +108,7 @@ export default function Overview() {
             Welcome to your Dashboard!
           </h1>
         </container>
-        <StyledButton onClick={handleButtonClick} sx={{ mt: 3 }}>
+        <StyledButton onClick={handleButtonClick} sx={{ mt: 1 }}>
           Solicita o programare
         </StyledButton>
       </section>

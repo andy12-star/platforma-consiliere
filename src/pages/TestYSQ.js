@@ -12,6 +12,7 @@ import UserNav from "../components/UserNav";
 import { StyledButton } from "../components/styledComp";
 import { useNavigate } from "react-router-dom";
 import styles from "./mainPages.module.css";
+import TestService from "../services/test.service";
 
 const questions = [
   {
@@ -64,9 +65,13 @@ const TestYSQ = () => {
     setResponses(newResponses);
   };
 
-  const handleSubmit = () => {
-    localStorage.setItem("testYSQResponses", JSON.stringify(responses));
-    navigate("/rezultateteste");
+  const handleSubmit = async () => {
+    try {
+      await TestService.submitTest("YSQ", responses);
+      navigate("/rezultateteste");
+    } catch (error) {
+      console.error("Failed to submit test", error);
+    }
   };
 
   return (
@@ -146,8 +151,6 @@ const TestYSQ = () => {
             <StyledButton
               sx={{
                 mt: 3,
-                bgcolor: "#B9D9EB",
-                "&:hover": { bgcolor: "#B2BAC2" },
               }}
               onClick={handleSubmit}
             >

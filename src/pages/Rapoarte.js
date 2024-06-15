@@ -15,14 +15,24 @@ import styles from "./mainPages.module.css";
 
 const appointments = [
   {
+    id: 1,
     name: "Andreea Ionita",
-    date: "09 Apr 2024",
+    date: "2024-04-09",
     year: 2024,
+    doctor: "Dr. Ion Popescu",
+    details: {
+      duration: "30 min",
+      observation: "All good.",
+      recommendation: "Continue with current treatment.",
+    },
   },
   {
-    name: "Theo ciobanoiu",
-    date: "09 Apr 2024",
+    id: 2,
+    name: "Theo Ciobanoiu",
+    date: "2024-04-09",
     year: 2024,
+    doctor: "Dr. Elena Ionescu",
+    details: null,
   },
 ];
 
@@ -43,14 +53,12 @@ const RaportConsultatie = () => {
     useState(appointments);
 
   const handleSearch = (event) => {
-    const value = event.target.value;
+    const value = event.target.value.toLowerCase();
     setSearchTerm(value);
     const filtered = appointments.filter(
       (appointment) =>
-        appointment.doctor.toLowerCase().includes(value.toLowerCase()) ||
-        appointment.details?.trimisDe
-          .toLowerCase()
-          .includes(value.toLowerCase())
+        appointment.doctor.toLowerCase().includes(value) ||
+        appointment.name.toLowerCase().includes(value)
     );
     setFilteredAppointments(filtered);
   };
@@ -121,7 +129,7 @@ const RaportConsultatie = () => {
               <Grid container spacing={2}>
                 {groupedAppointments[year].map((appointment, index) => (
                   <Grid item xs={10} sm={6} md={7} lg={3} key={index}>
-                    <RaportCard {...appointment} />
+                    <RaportCard appointment={appointment} />
                   </Grid>
                 ))}
               </Grid>

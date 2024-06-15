@@ -61,9 +61,9 @@ export const StyledButton = styled(Button)({
   position: "relative",
   bottom: "20px",
   borderWidth: 10,
-  backgroundColor: "#e1ebee",
+  backgroundColor: "#F8837940",
   "&:hover": {
-    backgroundColor: "#c",
+    backgroundColor: "#E2725B80",
     borderWidth: 2,
   },
 });

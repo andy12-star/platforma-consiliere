@@ -71,7 +71,6 @@ const ConsultCard = ({ doctor, date, details }) => {
             marginTop: 4,
             textTransform: "none",
             fontSize: "18px",
-            "&:hover": { bgcolor: "#FF6347" },
           }}
         >
           VEZI DETALII RAPORT
@@ -164,7 +163,6 @@ const ConsultCard = ({ doctor, date, details }) => {
                 mr: 4,
                 mt: 3,
                 fontSize: "1.5rem",
-                "&:hover": { bgcolor: "#FF6347" },
               }}
             >
               inchide

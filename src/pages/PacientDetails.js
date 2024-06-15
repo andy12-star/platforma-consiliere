@@ -49,7 +49,14 @@ const PacientDetails = () => {
             flexDirection="column"
             alignItems="center"
             textAlign="center"
-            sx={{ minHeight: "92vh", bgcolor: "#ffff", p: 1 }}
+            sx={{
+              minHeight: "92vh",
+              bgcolor: "#ffff",
+              padding: 3,
+              borderRadius: 2,
+
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+            }}
           >
             <Typography variant="h3" sx={{ fontWeight: "bold", mt: 2 }}>
               Date personale
@@ -62,8 +69,11 @@ const PacientDetails = () => {
               sx={{
                 minHeight: "30vh",
                 width: "50vh",
-                bgcolor: "#E1EBEE",
-                p: 1,
+                bgcolor: "#F0808040",
+                padding: 3,
+                borderRadius: 2,
+
+                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
               }}
             >
               <Typography variant="h4" sx={{ mt: 5 }}>

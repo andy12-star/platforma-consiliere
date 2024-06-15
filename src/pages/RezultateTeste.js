@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Typography, Box } from "@mui/material";
 import UserNav from "../components/UserNav";
 import Chart from "../components/Chart";
+import TestService from "../services/test.service";
 import styles from "./mainPages.module.css";
 
 const getMean = (responses) => {
@@ -13,31 +14,31 @@ const interpretPersonalitateMean = (mean) => {
   if (mean >= 1 && mean < 1.5)
     return "It suggests that you are a highly sociable, empathetic, and organized individual with a strong sense of curiosity and emotional stability";
   if (mean >= 1.5 && mean < 2.5)
-    return "2 - You are moderately sociable and curious, enjoying social interactions and exploring new topics to a reasonable extent. You have a fair amount of empathy and can relate to others' emotions, though not as intensely. ";
+    return "You are moderately sociable and curious, enjoying social interactions and exploring new topics to a reasonable extent. You have a fair amount of empathy and can relate to others' emotions, though not as intensely.";
   if (mean >= 2.5 && mean < 3.5)
     return "You are sentimental, use organizational tools, and learn from your mistakes. You feel confident and comfortable initiating conversations with interesting people.";
   if (mean >= 3.5 && mean < 4.5)
-    return " You exhibit a balanced personality.ou value organization, learn from mistakes, and are confident in social interactions.";
+    return "You exhibit a balanced personality. You value organization, learn from mistakes, and are confident in social interactions.";
   if (mean >= 4.5 && mean < 5.5)
-    return "You are introverted, prefer stability, and avoid new social connections. You tend to be content with known subjects, maintain emotional distance";
+    return "You are introverted, prefer stability, and avoid new social connections. You tend to be content with known subjects, maintain emotional distance.";
   if (mean >= 5.5 && mean <= 6)
-    return " You are highly introverted, dislike social interactions, and avoid new experiences. You are emotionally detached, disorganized, and easily stressed. You lack confidence and often doubt your abilities.";
+    return "You are highly introverted, dislike social interactions, and avoid new experiences. You are emotionally detached, disorganized, and easily stressed. You lack confidence and often doubt your abilities.";
   return "Testul nu a fost completat.";
 };
 
 const interpretSMIMean = (mean) => {
   if (mean >= 1 && mean < 1.5)
-    return "ou are likely to feel deeply connected to your emotions and experiences, often experiencing intense feelings. However, this strong emotional connection might make you prone to struggles with self-esteem and impulse control.";
+    return "You are likely to feel deeply connected to your emotions and experiences, often experiencing intense feelings. However, this strong emotional connection might make you prone to struggles with self-esteem and impulse control.";
   if (mean >= 1.5 && mean < 2.5)
-    return "You likely have a deep-seated need for acceptance and validation, which can sometimes lead to challenges in managing self-worth and interpersonal relationships. ";
+    return "You likely have a deep-seated need for acceptance and validation, which can sometimes lead to challenges in managing self-worth and interpersonal relationships.";
   if (mean >= 2.5 && mean < 3.5)
-    return " You likely experience a healthy mix of emotional highs and lows, with occasional struggles related to self-esteem and interpersonal dynamics. You are self-aware and reflective, often able to understand and articulate your feelings.";
+    return "You likely experience a healthy mix of emotional highs and lows, with occasional struggles related to self-esteem and interpersonal dynamics. You are self-aware and reflective, often able to understand and articulate your feelings.";
   if (mean >= 3.5 && mean < 4.5)
-    return "ou likely find it easy to adapt to various situations without being overly swayed by your emotions. While you maintain a balance between your internal experiences and external interactions, there might be times when deeper emotional issues are not fully addressed.";
+    return "You likely find it easy to adapt to various situations without being overly swayed by your emotions. While you maintain a balance between your internal experiences and external interactions, there might be times when deeper emotional issues are not fully addressed.";
   if (mean >= 4.5 && mean < 5.5)
-    return "You might find it easier to manage your emotions and maintain self-control, often appearing calm and collected even in stressful situations. However, this could also indicate a tendency to suppress feelings or avoid dealing with emotional issues. s";
+    return "You might find it easier to manage your emotions and maintain self-control, often appearing calm and collected even in stressful situations. However, this could also indicate a tendency to suppress feelings or avoid dealing with emotional issues.";
   if (mean >= 5.5 && mean <= 6)
-    return "You likely have a robust sense of self-worth and find it easy to navigate interpersonal relationships without being overly influenced by emotions. This strong independence and self-confidence mean you are well-equipped to handle life's challenges. ";
+    return "You likely have a robust sense of self-worth and find it easy to navigate interpersonal relationships without being overly influenced by emotions. This strong independence and self-confidence mean you are well-equipped to handle life's challenges.";
   return "Testul nu a fost completat.";
 };
 
@@ -63,15 +64,31 @@ const calculateYSQScores = (responses) => {
 };
 
 const RezultateTest = () => {
-  const personalitateResponses = JSON.parse(
-    localStorage.getItem("testResponses") || "[]"
-  );
-  const smiResponses = JSON.parse(
-    localStorage.getItem("testSMIResponses") || "[]"
-  );
-  const testYSQResponses =
-    JSON.parse(localStorage.getItem("testYSQResponses")) || [];
-  const ysqScores = calculateYSQScores(testYSQResponses);
+  const [personalitateResponses, setPersonalitateResponses] = useState([]);
+  const [smiResponses, setSmiResponses] = useState([]);
+  const [ysqResponses, setYsqResponses] = useState([]);
+  const [ysqScores, setYsqScores] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const personalitateData = await TestService.getTestResults(
+          "personalitate"
+        );
+        const smiData = await TestService.getTestResults("smi");
+        const ysqData = await TestService.getTestResults("ysq");
+
+        setPersonalitateResponses(personalitateData.responses);
+        setSmiResponses(smiData.responses);
+        setYsqResponses(ysqData.responses);
+        setYsqScores(calculateYSQScores(ysqData.responses));
+      } catch (error) {
+        console.error("Failed to fetch test results", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const personalitateMean = getMean(personalitateResponses);
   const smiMean = getMean(smiResponses);

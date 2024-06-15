@@ -52,7 +52,7 @@ function Programare() {
           sx={{
             ml: 25,
             mt: 6,
-            bgcolor: "#ADD8E6",
+            bgcolor: "#F0808040", // asta e culoarea cea mai buna
             padding: 10,
             borderRadius: 10,
             width: "85%",

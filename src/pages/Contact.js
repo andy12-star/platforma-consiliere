@@ -1,18 +1,15 @@
 import PageNav from "../components/PageNav";
 import styles from "./mainPages.module.css";
 import React from "react";
-// import { useNavigate } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { StyledTextField, StyledButton } from "../components/styledComp";
-import AuthService from "../services/AuthService";
+import ContactService from "../services/contact.service";
 
 function Contact() {
-  // const navigate = useNavigate();
-
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     email: Yup.string()
@@ -23,9 +20,10 @@ function Contact() {
 
   const handleContactSubmit = async (values, actions) => {
     try {
-      await AuthService.contact(values);
+      await ContactService.submitContactForm(values);
       actions.setSubmitting(false);
-      window.location.reload();
+      alert("Mesajul a fost trimis");
+      actions.resetForm();
     } catch (error) {
       actions.setFieldError(
         "general",
@@ -41,7 +39,7 @@ function Contact() {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="50vh"
+        minHeight="80vh"
       >
         <Box
           sx={{
@@ -50,6 +48,7 @@ function Contact() {
             margin: 5,
             width: 800,
             textAlign: "center",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
           }}
         >
           <Formik
@@ -68,43 +67,60 @@ function Contact() {
                   <Typography
                     variant="h2"
                     sx={{
-                      marginTop: "9em",
+                      marginTop: "2em",
                       fontWeight: "bold",
                       fontFamily: "Times New Roman, Times, serif",
+                      fontSize: "3rem",
                     }}
                   >
                     Ia legatura cu noi!
                   </Typography>
                   <Field
-                    sx={{ width: 400 }}
+                    sx={{ width: 500, fontSize: "3rem" }}
                     as={StyledTextField}
                     required
-                    label="Nume Prenume"
+                    label="Nume"
                     id="name"
                     name="name"
                     type="text"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(props.touched.name && props.errors.name)}
-                    helperText={props.touched.name && props.errors.name}
+                    helperText={
+                      props.touched.name && props.errors.name ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.name}
+                        </span>
+                      ) : null
+                    }
                     value={props.values.name}
                     onBlur={props.handleBlur}
                     onChange={props.handleChange}
                   />
                   <Field
-                    sx={{ width: 400 }}
+                    sx={{ width: 500 }}
                     as={StyledTextField}
                     required
                     label="Email"
                     id="email"
                     name="email"
                     type="email"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(props.touched.email && props.errors.email)}
-                    helperText={props.touched.email && props.errors.email}
+                    helperText={
+                      props.touched.email && props.errors.email ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.email}
+                        </span>
+                      ) : null
+                    }
                     value={props.values.email}
                     onBlur={props.handleBlur}
                     onChange={props.handleChange}
                   />
                   <Field
-                    sx={{ width: 400 }}
+                    sx={{ width: 500 }}
                     as={StyledTextField}
                     required
                     label="Mesaj"
@@ -113,25 +129,36 @@ function Contact() {
                     type="text"
                     multiline
                     rows={4}
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(
                       props.touched.message && props.errors.message
                     )}
-                    helperText={props.touched.message && props.errors.message}
+                    helperText={
+                      props.touched.message && props.errors.message ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.message}
+                        </span>
+                      ) : null
+                    }
                     value={props.values.message}
                     onBlur={props.handleBlur}
                     onChange={props.handleChange}
                   />
                   <StyledButton
-                    onClick={() => {
-                      alert("Mesajul a fost trimis");
-                    }}
+                    type="submit"
+                    sx={{ fontSize: "1.5rem", padding: "1em 2em" }}
                   >
                     Submit
                   </StyledButton>
                   {props.errors.general && (
                     <Typography
                       variant="body2"
-                      style={{ color: "red", marginTop: "1em" }}
+                      style={{
+                        color: "red",
+                        marginTop: "1em",
+                        fontSize: "1.5rem",
+                      }}
                     >
                       {props.errors.general}
                     </Typography>
@@ -146,7 +173,7 @@ function Contact() {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        height="100px"
+        height="50px"
       >
         <StyledButton
           sx={{
@@ -162,31 +189,3 @@ function Contact() {
 }
 
 export default Contact;
-
-/* import PageNav from "../components/PageNav";
-import styles from "./mainPages.module.css";
-import * as React from "react";
-import { Button, Box } from "@mui/material";
-
-import ContactForm from "../components/ContactForm";
-
-function Contact() {
-  return (
-    <main className={styles.mainPage}>
-      <PageNav />
-      <ContactForm />
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100px"
-      >
-        <Button variant="contained" size="large">
-          Contact anonim
-        </Button>
-      </Box>
-    </main>
-  );
-}
-
-export default Contact; */

@@ -54,7 +54,7 @@ function Register() {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="50vh"
+        minHeight="80vh"
       >
         <Box
           sx={{
@@ -90,20 +90,26 @@ function Register() {
                   </Typography>
 
                   <Field
-                    sx={{ width: 400 }}
+                    sx={{ width: 400, fontSize: "1.5rem" }}
                     as={StyledTextField}
                     required
                     label="Nume"
                     id="outlined-required"
                     name="clientFirstName"
                     type="text"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(
                       props.touched.clientFirstName &&
                         props.errors.clientFirstName
                     )}
                     helperText={
                       props.touched.clientFirstName &&
-                      props.errors.clientFirstName
+                      props.errors.clientFirstName ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.clientFirstName}
+                        </span>
+                      ) : null
                     }
                     value={props.values.clientFirstName}
                     onBlur={props.handleBlur}
@@ -117,13 +123,19 @@ function Register() {
                     id="name-input-last"
                     name="clientLastName"
                     type="text"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(
                       props.touched.clientLastName &&
                         props.errors.clientLastName
                     )}
                     helperText={
                       props.touched.clientLastName &&
-                      props.errors.clientLastName
+                      props.errors.clientLastName ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.clientLastName}
+                        </span>
+                      ) : null
                     }
                     value={props.values.clientLastName}
                     onBlur={props.handleBlur}
@@ -137,11 +149,17 @@ function Register() {
                     id="email-input"
                     name="clientEmail"
                     type="text"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(
                       props.touched.clientEmail && props.errors.clientEmail
                     )}
                     helperText={
-                      props.touched.clientEmail && props.errors.clientEmail
+                      props.touched.clientEmail && props.errors.clientEmail ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.clientEmail}
+                        </span>
+                      ) : null
                     }
                     value={props.values.clientEmail}
                     onBlur={props.handleBlur}
@@ -155,10 +173,21 @@ function Register() {
                     id="phone-input"
                     name="clientPhoneNr"
                     type="text"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(
                       props.touched.clientPhoneNr && props.errors.clientPhoneNr
                     )}
+                    helperText={
+                      props.touched.clientPhoneNr &&
+                      props.errors.clientPhoneNr ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.clientPhoneNr}
+                        </span>
+                      ) : null
+                    }
                     value={props.values.clientPhoneNr}
+                    onBlur={props.handleBlur}
                     onChange={props.handleChange}
                   />
                   <Field
@@ -169,11 +198,22 @@ function Register() {
                     id="fac-input"
                     name="clientFaculty"
                     type="text"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(
                       props.touched.clientFaculty && props.errors.clientFaculty
                     )}
+                    helperText={
+                      props.touched.clientFaculty &&
+                      props.errors.clientFaculty ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.clientFaculty}
+                        </span>
+                      ) : null
+                    }
                     value={props.values.clientFaculty}
                     onChange={props.handleChange}
+                    onBlur={props.handleBlur}
                   />
                   <Field
                     sx={{ width: 400 }}
@@ -183,16 +223,25 @@ function Register() {
                     id="password"
                     name="clientPassword"
                     type="text"
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     error={Boolean(
                       props.touched.clientPassword &&
                         props.errors.clientPassword
                     )}
+                    helperText={
+                      props.touched.clientPassword &&
+                      props.errors.clientPassword ? (
+                        <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.clientPassword}
+                        </span>
+                      ) : null
+                    }
                     value={props.values.clientPassword}
                     onChange={props.handleChange}
+                    onBlur={props.handleBlur}
                   />
-                  <StyledButton type="submit" onClick={handleRegister}>
-                    Submit
-                  </StyledButton>
+                  <StyledButton type="submit">Submit</StyledButton>
                 </Stack>
               </Form>
             )}
@@ -204,201 +253,3 @@ function Register() {
 }
 
 export default Register;
-/* import PageNav from "../components/PageNav";
-import styles from "./Login.module.css";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import * as Yup from "yup";
-import { Field, Form, Formik } from "formik";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { StyledTextField, StyledButton } from "../components/styledComp";
-import AuthService from "../services/AuthService";
-
-function Register() {
-  const navigate = useNavigate();
-
-  const validationSchema = Yup.object().shape({
-    clientFirstName: Yup.string().required("This field is required"),
-    clientLastName: Yup.string().required("This field is required"),
-    clientEmail: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
-    clientPhoneNr: Yup.string()
-      .min(10, "Phone number too short")
-      .max(10, "Phone number too long")
-      .required("Invalid phone format"),
-    clientPassword: Yup.string().required("This field is required"),
-  });
-
-  const handleRegister = async (values, { setSubmitting }) => {
-    const registerValues = {
-      clientFirstName: values.clientFirstName,
-      clientLastName: values.clientLastName,
-      clientEmail: values.clientEmail,
-      clientPhoneNr: values.clientPhoneNr,
-      clientPassword: values.clientPassword,
-    };
-    try {
-      await AuthService.register(registerValues);
-      localStorage.setItem("userData", JSON.stringify(registerValues));
-      navigate("/login");
-    } catch (error) {
-      console.error("Registration failed", error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <main className={styles.login}>
-      <PageNav />
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="50vh"
-      >
-        <Box
-          sx={{
-            bgcolor: "#ffffff",
-            borderRadius: 10,
-            margin: 5,
-            width: 800,
-            textAlign: "center",
-          }}
-        >
-          <Formik
-            initialValues={{
-              clientFirstName: '',
-              clientLastName: '',
-              clientEmail: '',
-              clientPhoneNr: '',
-              clientPassword: ''
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleRegister}
-          >
-            {(props) => (
-              <Form noValidate className="form">
-                <Stack
-                  justifyContent="center"
-                  alignItems="center"
-                  width="100%"
-                  spacing={5}
-                >
-                  <Typography
-                    variant="h4"
-                    style={{
-                      marginTop: "1em",
-                      fontFamily: "Manrope",
-                      color: "#15171c",
-                    }}
-                  >
-                    Introdu datele pentru inregistrare:
-                  </Typography>
-                  <Field
-                    sx={{ width: 400 }}
-                    as={StyledTextField}
-                    required
-                    label="First Name"
-                    id="outlined-required"
-                    name="clientFirstName"
-                    type="text"
-                    error={Boolean(
-                      props.touched.clientFirstName &&
-                        props.errors.clientFirstName
-                    )}
-                    helperText={
-                      props.touched.clientFirstName &&
-                      props.errors.clientFirstName
-                    }
-                    value={props.values.clientFirstName}
-                    onBlur={props.handleBlur}
-                    onChange={props.handleChange}
-                  />
-                  <Field
-                    sx={{ width: 400 }}
-                    as={StyledTextField}
-                    required
-                    label="Last Name"
-                    id="name-input-last"
-                    name="clientLastName"
-                    type="text"
-                    error={Boolean(
-                      props.touched.clientLastName &&
-                        props.errors.clientLastName
-                    )}
-                    helperText={
-                      props.touched.clientLastName &&
-                      props.errors.clientLastName
-                    }
-                    value={props.values.clientLastName}
-                    onBlur={props.handleBlur}
-                    onChange={props.handleChange}
-                  />
-                  <Field
-                    sx={{ width: 400 }}
-                    as={StyledTextField}
-                    required
-                    label="Email"
-                    id="email-input"
-                    name="clientEmail"
-                    type="text"
-                    error={Boolean(
-                      props.touched.clientEmail && props.errors.clientEmail
-                    )}
-                    helperText={
-                      props.touched.clientEmail && props.errors.clientEmail
-                    }
-                    value={props.values.clientEmail}
-                    onBlur={props.handleBlur}
-                    onChange={props.handleChange}
-                  />
-                  <Field
-                    sx={{ width: 400 }}
-                    as={StyledTextField}
-                    required
-                    label="Phone Number"
-                    id="phone-input"
-                    name="clientPhoneNr"
-                    type="text"
-                    error={Boolean(
-                      props.touched.clientPhoneNr && props.errors.clientPhoneNr
-                    )}
-                    value={props.values.clientPhoneNr}
-                    onBlur={props.handleBlur}
-                    onChange={props.handleChange}
-                  />
-                  <Field
-                    sx={{ width: 400 }}
-                    as={StyledTextField}
-                    required
-                    label="Password"
-                    id="password"
-                    name="clientPassword"
-                    type="password"
-                    error={Boolean(
-                      props.touched.clientPassword &&
-                        props.errors.clientPassword
-                    )}
-                    value={props.values.clientPassword}
-                    onBlur={props.handleBlur}
-                    onChange={props.handleChange}
-                  />
-                  <StyledButton type="submit">
-                    Submit
-                  </StyledButton>
-                </Stack>
-              </Form>
-            )}
-          </Formik>
-        </Box>
-      </Box>
-    </main>
-  );
-}
-
-export default Register;
-*/

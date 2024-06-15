@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -12,6 +12,7 @@ import UserNav from "../components/UserNav";
 import { StyledCalendar, StyledButton } from "../components/styledComp";
 import { useNavigate } from "react-router-dom";
 import styles from "./mainPages.module.css";
+import AppointmentService from "../services/appointment.service";
 
 const Programari = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -21,67 +22,59 @@ const Programari = () => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [showNewAppointmentButton, setShowNewAppointmentButton] =
     useState(false);
+  const [appointments, setAppointments] = useState([]);
 
-  const appointments = [
-    {
-      status: "Programare onorata",
-      title: "Consultatie Generala",
-      date: "2024-04-05",
-      time: "10:00 - 10:30",
-      location: "Bucuresti Policlinica Baneasa",
-      specializare: "Dr. Ion Popescu",
-      doctor: "Medic generalist, Consultatie generala",
-    },
-    {
-      status: "Programare neonorata",
-      title: "Consultatie Generala",
-      date: "2024-04-10",
-      time: "10:00 - 10:30",
-      location: "Bucuresti Policlinica Baneasa",
-      specializare: "Dr. Ion Popescu",
-      doctor: "Medic generalist, Consultatie generala",
-    },
-    {
-      status: "neconfirmata",
-      title: "Analize Laborator",
-      date: "2024-09-07",
-      time: "09:15 - 09:30",
-      location: "Bucuresti Policlinica Baneasa",
-      specializare: "Recoltare Sange Adulti",
-      doctor: "Asistent medical, Medic specialist, Analize Laborator",
-    },
-    {
-      status: "confirmata",
-      title: "Analize Laborator",
-      date: "2024-10-08",
-      time: "09:15 - 09:30",
-      location: "Bucuresti Policlinica Baneasa",
-      specializare: "Recoltare Sange Adulti",
-      doctor: "Asistent medical, Medic specialist, Analize Laborator",
-    },
-  ];
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  const fetchAppointments = async () => {
+    try {
+      const appointmentsData = await AppointmentService.getAppointments();
+      setAppointments(appointmentsData);
+    } catch (error) {
+      console.error("Failed to fetch appointments", error);
+    }
+  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
     const appointment = appointments.find(
       (appt) => new Date(appt.date).toDateString() === date.toDateString()
     );
-
-    if (!appointment) {
-      const day = date.getDay();
-      if (day === 0 || day === 6) {
-        setDialogContent("Clinica este închisă.");
-        setShowNewAppointmentButton(false);
+    const currentDate = new Date();
+    if (date < currentDate) {
+      if (!appointment) {
+        const day = date.getDay();
+        if (day === 0 || day === 6) {
+          setDialogContent("Clinica este închisă.");
+        } else {
+          setDialogContent("Nu există programare.");
+        }
+        setOpen(true);
+        setSelectedAppointment(null);
       } else {
-        setDialogContent("Nu există programare.");
-        setShowNewAppointmentButton(true);
+        setSelectedAppointment(appointment);
+        setOpen(true);
+        setShowNewAppointmentButton(false);
       }
-      setOpen(true);
-      setSelectedAppointment(null);
     } else {
-      setSelectedAppointment(appointment);
-      setOpen(true);
-      setShowNewAppointmentButton(false);
+      if (!appointment) {
+        const day = date.getDay();
+        if (day === 0 || day === 6) {
+          setDialogContent("Clinica este închisă.");
+          setShowNewAppointmentButton(false);
+        } else {
+          setDialogContent("Nu există programare.");
+          setShowNewAppointmentButton(true);
+        }
+        setOpen(true);
+        setSelectedAppointment(null);
+      } else {
+        setSelectedAppointment(appointment);
+        setOpen(true);
+        setShowNewAppointmentButton(false);
+      }
     }
   };
 
@@ -115,6 +108,22 @@ const Programari = () => {
     navigate("/programare");
   };
 
+  const handleModifyAppointment = () => {
+    navigate("/modifica-programare", {
+      state: { appointment: selectedAppointment },
+    });
+  };
+
+  const handleDeleteAppointment = async () => {
+    try {
+      await AppointmentService.deleteAppointment(selectedAppointment.id);
+      fetchAppointments(); // Refresh the appointments list
+      setOpen(false);
+    } catch (error) {
+      console.error("Failed to delete appointment", error);
+    }
+  };
+
   return (
     <main className={styles.mainPage}>
       <UserNav />
@@ -123,7 +132,7 @@ const Programari = () => {
         flexDirection="column"
         alignItems="center"
         textAlign="center"
-        sx={{ minHeight: "92vh", /*bgcolor: "#E1EBEE",*/ p: 1 }}
+        sx={{ minHeight: "92vh", p: 1 }}
       >
         <Container maxWidth="xl">
           <Box
@@ -265,6 +274,29 @@ const Programari = () => {
           )}
         </DialogContent>
         <DialogActions>
+          {selectedAppointment &&
+            new Date(selectedAppointment.date) > new Date() && (
+              <>
+                <StyledButton
+                  onClick={handleModifyAppointment}
+                  color="primary"
+                  sx={{
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Modifica Programare
+                </StyledButton>
+                <StyledButton
+                  onClick={handleDeleteAppointment}
+                  color="secondary"
+                  sx={{
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Sterge Programare
+                </StyledButton>
+              </>
+            )}
           {showNewAppointmentButton && (
             <StyledButton
               onClick={handleNewAppointment}
@@ -272,7 +304,6 @@ const Programari = () => {
               sx={{
                 mr: 55,
                 fontSize: "1.5rem",
-                "&:hover": { bgcolor: "#FF6347" },
               }}
             >
               Programare Nouă
@@ -284,7 +315,6 @@ const Programari = () => {
             sx={{
               mr: 4,
               fontSize: "1.5rem",
-              "&:hover": { bgcolor: "#FF6347" },
             }}
           >
             Închide

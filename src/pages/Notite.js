@@ -15,55 +15,27 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import UserNav from "../components/UserNav";
 import { StyledButton } from "../components/styledComp";
+import NotesService from "../services/notes.service";
 import styles from "./mainPages.module.css";
 
-const initialNotes = {
-  2023: [
-    {
-      id: 1,
-      title: "Consultation with Dr. Smith",
-      text: "Discussed general health.",
-      date: "2023-01-15",
-    },
-    {
-      id: 2,
-      title: "Follow-up for blood test",
-      text: "Reviewed blood test results.",
-      date: "2023-02-10",
-    },
-  ],
-  2024: [
-    {
-      id: 1,
-      title: "Scheduled surgery with Dr. Lee",
-      text: "Preparation for surgery.",
-      date: "2024-03-05",
-    },
-    {
-      id: 2,
-      title: "Post-surgery checkup",
-      text: "Recovery plan and next steps.",
-      date: "2024-04-20",
-    },
-  ],
-};
-
 const Notite = () => {
-  const [notes, setNotes] = useState(initialNotes);
+  const [notes, setNotes] = useState({});
   const [newNoteTitle, setNewNoteTitle] = useState("");
   const [newNoteText, setNewNoteText] = useState("");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const storedNotes = localStorage.getItem("appointmentNotes");
-    if (storedNotes) {
-      setNotes(JSON.parse(storedNotes));
-    }
+    fetchNotes();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("appointmentNotes", JSON.stringify(notes));
-  }, [notes]);
+  const fetchNotes = async () => {
+    try {
+      const data = await NotesService.getNotes();
+      setNotes(data);
+    } catch (error) {
+      console.error("Failed to fetch notes", error);
+    }
+  };
 
   const handleNoteTitleChange = (e) => {
     setNewNoteTitle(e.target.value);
@@ -73,28 +45,30 @@ const Notite = () => {
     setNewNoteText(e.target.value);
   };
 
-  const handleAddNote = () => {
+  const handleAddNote = async () => {
     if (newNoteTitle.trim() === "" || newNoteText.trim() === "") return;
 
     const currentDate = new Date().toISOString().split("T")[0];
     const currentYear = new Date().getFullYear();
-    const updatedNotes = {
-      ...notes,
-      [currentYear]: [
-        ...(notes[currentYear] || []),
-        {
-          id: Date.now(),
-          title: newNoteTitle,
-          text: newNoteText,
-          date: currentDate,
-        },
-      ],
+    const newNote = {
+      title: newNoteTitle,
+      text: newNoteText,
+      date: currentDate,
     };
 
-    setNotes(updatedNotes);
-    setNewNoteTitle("");
-    setNewNoteText("");
-    setOpen(false);
+    try {
+      const addedNote = await NotesService.addNote(newNote);
+      const updatedNotes = {
+        ...notes,
+        [currentYear]: [...(notes[currentYear] || []), addedNote],
+      };
+      setNotes(updatedNotes);
+      setNewNoteTitle("");
+      setNewNoteText("");
+      setOpen(false);
+    } catch (error) {
+      console.error("Failed to add note", error);
+    }
   };
 
   const handleClickOpen = () => {
@@ -117,7 +91,6 @@ const Notite = () => {
         textAlign="center"
         sx={{
           minHeight: "92vh",
-          // bgcolor: "#E1EBEE",
           p: 1,
         }}
       >
@@ -139,15 +112,21 @@ const Notite = () => {
             alignItems="center"
             marginTop={4}
             textAlign="center"
-            sx={{ minHeight: "92vh", p: 3, bgcolor: "#ffffff" }}
+            sx={{
+              minHeight: "92vh",
+              p: 3,
+              bgcolor: "#ffffff",
+              padding: 3,
+              borderRadius: 2,
+
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+            }}
           >
             <StyledButton
               onClick={handleClickOpen}
               sx={{
                 mt: 3,
                 mb: 3,
-                bgcolor: "#B9D9EB",
-                "&:hover": { bgcolor: "#B2BAC2" },
               }}
             >
               Adauga Notita
