@@ -1,14 +1,6 @@
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import {
-  Menu,
-  MenuItem,
-  IconButton,
-  Avatar,
-  Tooltip,
-  Typography,
-  Box,
-} from "@mui/material";
+import React, {useState} from "react";
+import {NavLink, useNavigate} from "react-router-dom";
+import {Avatar, Box, IconButton, Menu, MenuItem, Tooltip, Typography,} from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -17,6 +9,7 @@ import styles from "./PageNav.module.css";
 
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import {useAuth} from "../services/context/AuthContext";
 
 const dosarMedicalPages = ["RapoarteConsultatie", "RezultateTeste"];
 const testPages = ["Test personalitate", "Test SMI", "Test YSQ"];
@@ -31,8 +24,10 @@ function UserNav() {
     navigate(`/${page.toLowerCase().replace(" ", "")}`);
   };
 
+  const {user, logout} = useAuth();
+
   const handleLogout = () => {
-    navigate("/");
+    logout();
   };
 
   const handleOpenDosarMenu = (event) => {
@@ -58,16 +53,17 @@ function UserNav() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const clientName = "John Doe";
+  console.log("UserNav user: ");
+  console.log(user);
+  const clientName = user.firstName + " " + user.lastName;
 
   return (
     <nav className={styles.nav}>
       <ul>
         <li>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{display: "flex", alignItems: "center"}}>
             <NavLink to="#" onClick={handleOpenDosarMenu}>
-              Dosar Medical <ArrowDropDownIcon />
+              Dosar Medical <ArrowDropDownIcon/>
             </NavLink>
             <Menu
               id="menu-dosar"
@@ -97,17 +93,17 @@ function UserNav() {
                     handleNavItemClick(page);
                     handleCloseDosarMenu();
                   }}
-                  sx={{ fontSize: "20px", py: 2 }}
+                  sx={{fontSize: "20px", py: 2}}
                 >
                   <ListItemIcon>
                     {page === "RapoarteConsultatie" ? (
-                      <DescriptionIcon fontSize="large" />
+                      <DescriptionIcon fontSize="large"/>
                     ) : (
-                      <AssignmentIcon fontSize="large" />
+                      <AssignmentIcon fontSize="large"/>
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    primaryTypographyProps={{ fontSize: "20px" }}
+                    primaryTypographyProps={{fontSize: "20px"}}
                     primary={
                       page === "RapoarteConsultatie"
                         ? "Rapoarte consultatii"
@@ -123,9 +119,9 @@ function UserNav() {
           <NavLink to="/notite">Notite</NavLink>
         </li>
         <li>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{display: "flex", alignItems: "center"}}>
             <NavLink to="#" onClick={handleOpenTestMenu}>
-              Teste <ArrowDropDownIcon />
+              Teste <ArrowDropDownIcon/>
             </NavLink>
             <Menu
               id="menu-test"
@@ -155,10 +151,10 @@ function UserNav() {
                     handleNavItemClick(page);
                     handleCloseTestMenu();
                   }}
-                  sx={{ fontSize: "20px", py: 2 }}
+                  sx={{fontSize: "20px", py: 2}}
                 >
                   <ListItemText
-                    primaryTypographyProps={{ fontSize: "20px" }}
+                    primaryTypographyProps={{fontSize: "20px"}}
                     primary={page}
                   />
                 </MenuItem>
@@ -176,12 +172,12 @@ function UserNav() {
           <NavLink to="/pacienti">Pacienti</NavLink>
         </li>
         <li>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography variant="h6" component="div" sx={{ color: "black" }}>
+          <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
+            <Typography variant="h6" component="div" sx={{color: "black"}}>
               {clientName}
             </Typography>
             <Tooltip>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                 <Avatar
                   sx={{
                     bgcolor: "white",
@@ -190,12 +186,12 @@ function UserNav() {
                     height: 56,
                   }}
                 >
-                  <AccountCircle sx={{ fontSize: 40 }} />
+                  <AccountCircle sx={{fontSize: 40}}/>
                 </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
+              sx={{mt: "45px"}}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -216,7 +212,7 @@ function UserNav() {
                   handleCloseUserMenu();
                 }}
               >
-                <Typography textAlign="center" sx={{ fontSize: "18px" }}>
+                <Typography textAlign="center" sx={{fontSize: "18px"}}>
                   Profil
                 </Typography>
               </MenuItem>
@@ -226,7 +222,7 @@ function UserNav() {
                   handleCloseUserMenu();
                 }}
               >
-                <Typography textAlign="center" sx={{ fontSize: "18px" }}>
+                <Typography textAlign="center" sx={{fontSize: "18px"}}>
                   Logout
                 </Typography>
               </MenuItem>

@@ -4,11 +4,14 @@ import AuthService from "../AuthService";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   const login = async (username, password) => {
     const data = await AuthService.login(username, password);
-    setUser(data);
+    setUser(data.user);
   };
 
   const logout = () => {

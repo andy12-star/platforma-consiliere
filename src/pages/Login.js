@@ -7,8 +7,8 @@ import * as Yup from "yup";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { StyledTextField, StyledButton } from "../components/styledComp";
-import AuthService from "../services/AuthService";
+import { StyledButton, StyledTextField} from "../components/styledComp";
+import {useAuth} from "../services/context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
@@ -18,13 +18,12 @@ function Login() {
     password: Yup.string().required("Password is required"),
   });
 
+  const {login} = useAuth();
+
   const handleLogin = async (values, actions) => {
     try {
-      console.log("Login values:");
-      console.log(values.username + " " + values.password);
-      await AuthService.login(values.username, values.password);
-      navigate("/overview");
-      window.location.reload();
+      await login(values.username, values.password);
+      navigate("/overview"); // Redirect after successful login
     } catch (error) {
       console.error("Login failed", error);
       actions.setFieldError("general", "Username or password is incorrect");

@@ -90,7 +90,7 @@ const Profil = () => {
                 marginBottom: "20px",
               }}
             >
-              Data nasterii: {userData.dataNasterii || "N/A"}
+              Data nașterii: {userData.dataNasterii || "N/A"}
             </Typography>
             <Divider />
             <Typography
