@@ -2,7 +2,7 @@ import axios from "axios";
 import AuthService from "./AuthService";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "https://localhost:8081/api/v1",
 });
 
 // Interceptor pentru cereri, adăugând access token-ul la header-ul Authorization

@@ -53,8 +53,7 @@ function UserNav() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  console.log("UserNav user: ");
-  console.log(user);
+
   const clientName = user.firstName + " " + user.lastName;
 
   return (

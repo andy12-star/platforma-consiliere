@@ -1,11 +1,13 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
-const API_URL = "https://localhost:8081/notes";
+const API_URL = "https://localhost:8081/api/v1/notes";
 
 class NotesService {
-  async getNotes() {
+
+  //TODO: Change to getNotesForUser(userId)
+  async getNotesForUser(userId) {
     try {
-      const response = await axios.get(`${API_URL}/notes`);
+      const response = await axiosInstance.get(`/notes/`+userId);
       return response.data;
     } catch (error) {
       console.error("Fetching notes failed", error);
@@ -15,7 +17,7 @@ class NotesService {
 
   async addNote(note) {
     try {
-      const response = await axios.post(`${API_URL}/notes`, note);
+      const response = await axiosInstance.post(`/notes`, note);
       return response.data;
     } catch (error) {
       console.error("Adding note failed", error);
@@ -25,7 +27,7 @@ class NotesService {
 
   async deleteNote(noteId) {
     try {
-      const response = await axios.delete(`${API_URL}/notes/${noteId}`);
+      const response = await axiosInstance.delete(`/${noteId}`);
       return response.data;
     } catch (error) {
       console.error("Deleting note failed", error);
@@ -33,12 +35,10 @@ class NotesService {
     }
   }
 
+  //TODO: Delete and replace addNote with saveNote
   async updateNote(noteId, updatedNote) {
     try {
-      const response = await axios.put(
-        `${API_URL}/notes/${noteId}`,
-        updatedNote
-      );
+      const response = await axiosInstance.put(`/notes/${noteId}`, updatedNote);
       return response.data;
     } catch (error) {
       console.error("Updating note failed", error);

@@ -17,12 +17,18 @@ import UserNav from "../components/UserNav";
 import { StyledButton } from "../components/styledComp";
 import NotesService from "../services/notes.service";
 import styles from "./mainPages.module.css";
+import {useAuth} from "../services/context/AuthContext";
 
 const Notite = () => {
-  const [notes, setNotes] = useState({});
+  const [notes, setNotes] = useState([]);
   const [newNoteTitle, setNewNoteTitle] = useState("");
   const [newNoteText, setNewNoteText] = useState("");
   const [open, setOpen] = useState(false);
+
+  const {user} = useAuth()
+
+  var dateOptions = {year: 'numeric', month: 'long', day: 'numeric' };
+
 
   useEffect(() => {
     fetchNotes();
@@ -30,7 +36,7 @@ const Notite = () => {
 
   const fetchNotes = async () => {
     try {
-      const data = await NotesService.getNotes();
+      const data = await NotesService.getNotesForUser(user.id);
       setNotes(data);
     } catch (error) {
       console.error("Failed to fetch notes", error);
@@ -45,23 +51,21 @@ const Notite = () => {
     setNewNoteText(e.target.value);
   };
 
+
+
   const handleAddNote = async () => {
     if (newNoteTitle.trim() === "" || newNoteText.trim() === "") return;
 
-    const currentDate = new Date().toISOString().split("T")[0];
-    const currentYear = new Date().getFullYear();
     const newNote = {
+      id: null,
       title: newNoteTitle,
-      text: newNoteText,
-      date: currentDate,
+      notes: newNoteText,
+      userId: user.id,
     };
 
     try {
-      const addedNote = await NotesService.addNote(newNote);
-      const updatedNotes = {
-        ...notes,
-        [currentYear]: [...(notes[currentYear] || []), addedNote],
-      };
+      await NotesService.addNote(newNote);
+      const updatedNotes = await NotesService.getNotesForUser(user.id);
       setNotes(updatedNotes);
       setNewNoteTitle("");
       setNewNoteText("");
@@ -132,22 +136,7 @@ const Notite = () => {
               Adauga Notita
             </StyledButton>
             <Box sx={{ width: "100%" }}>
-              {groupedNotesByYear.map((year) => (
-                <Box key={year} marginBottom={4}>
-                  <Typography
-                    variant="h4"
-                    textAlign="left"
-                    gutterBottom
-                    sx={{
-                      ml: 10,
-                      fontSize: "2.5rem",
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    {year}
-                  </Typography>
-                  {notes[year].map((note) => (
+                  {notes.map((note) => (
                     <Accordion
                       key={note.id}
                       sx={{
@@ -164,16 +153,14 @@ const Notite = () => {
                       </AccordionSummary>
                       <AccordionDetails>
                         <Typography variant="h5" textAlign="left">
-                          {note.text}
+                          {note.notes}
                         </Typography>
-                        <Typography variant="h5" display="block" gutterBottom>
-                          Date: {note.date}
+                        <Typography variant="h6" display="block" gutterBottom>
+                          Created at {new Date(note.createdAt).toLocaleDateString("en-US", dateOptions).split("T")[0]}
                         </Typography>
                       </AccordionDetails>
                     </Accordion>
                   ))}
-                </Box>
-              ))}
             </Box>
             <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
               <DialogTitle
