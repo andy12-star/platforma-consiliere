@@ -127,19 +127,6 @@ const RaportCard = ({ appointment }) => {
             >
               Modifica Detalii Consultatie
             </StyledButton>
-            <StyledButton
-              fullWidth
-              onClick={handleDeleteAppointment}
-              variant="contained"
-              color="error"
-              sx={{
-                marginTop: 4,
-                textTransform: "none",
-                fontSize: "18px",
-              }}
-            >
-              Sterge Consultatie
-            </StyledButton>
           </>
         ) : (
           <StyledButton

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://localhost:8081/contact";
+const API_URL = "https://localhost:8081/api/v1/contact";
 
 class ContactService {
   async contact(contactValues) {

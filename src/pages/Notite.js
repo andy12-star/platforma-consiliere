@@ -17,7 +17,7 @@ import UserNav from "../components/UserNav";
 import { StyledButton } from "../components/styledComp";
 import NotesService from "../services/notes.service";
 import styles from "./mainPages.module.css";
-import {useAuth} from "../services/context/AuthContext";
+import { useAuth } from "../services/context/AuthContext";
 
 const Notite = () => {
   const [notes, setNotes] = useState([]);
@@ -25,10 +25,9 @@ const Notite = () => {
   const [newNoteText, setNewNoteText] = useState("");
   const [open, setOpen] = useState(false);
 
-  const {user} = useAuth()
+  const { user } = useAuth();
 
-  var dateOptions = {year: 'numeric', month: 'long', day: 'numeric' };
-
+  var dateOptions = { year: "numeric", month: "long", day: "numeric" };
 
   useEffect(() => {
     fetchNotes();
@@ -50,8 +49,6 @@ const Notite = () => {
   const handleNoteTextChange = (e) => {
     setNewNoteText(e.target.value);
   };
-
-
 
   const handleAddNote = async () => {
     if (newNoteTitle.trim() === "" || newNoteText.trim() === "") return;
@@ -136,31 +133,36 @@ const Notite = () => {
               Adauga Notita
             </StyledButton>
             <Box sx={{ width: "100%" }}>
-                  {notes.map((note) => (
-                    <Accordion
-                      key={note.id}
-                      sx={{
-                        bgcolor: "#F0F8FF",
-                        marginBottom: 2,
-                      }}
-                    >
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls={`panel-${note.id}-content`}
-                        id={`panel-${note.id}-header`}
-                      >
-                        <Typography variant="h4">{note.title}</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography variant="h5" textAlign="left">
-                          {note.notes}
-                        </Typography>
-                        <Typography variant="h6" display="block" gutterBottom>
-                          Created at {new Date(note.createdAt).toLocaleDateString("en-US", dateOptions).split("T")[0]}
-                        </Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                  ))}
+              {notes.map((note) => (
+                <Accordion
+                  key={note.id}
+                  sx={{
+                    bgcolor: "#F0F8FF",
+                    marginBottom: 2,
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel-${note.id}-content`}
+                    id={`panel-${note.id}-header`}
+                  >
+                    <Typography variant="h4">{note.title}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography variant="h5" textAlign="left">
+                      {note.notes}
+                    </Typography>
+                    <Typography variant="h6" display="block" gutterBottom>
+                      Created at{" "}
+                      {
+                        new Date(note.createdAt)
+                          .toLocaleDateString("en-US", dateOptions)
+                          .split("T")[0]
+                      }
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
             </Box>
             <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
               <DialogTitle

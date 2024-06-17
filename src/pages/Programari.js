@@ -34,6 +34,112 @@ const Programari = () => {
       setAppointments(appointmentsData);
     } catch (error) {
       console.error("Failed to fetch appointments", error);
+      // For demonstration purposes, use the provided appointments array
+      setAppointments([
+        {
+          id: 1,
+          status: " onorata",
+          title: "Consultatie Generala",
+          date: "2024-04-05",
+          time: "10:00 - 10:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Consultatie generala",
+          doctor: "Dr. Ion Popescu",
+          details: {
+            duration: "30 min",
+            observation: "All good.",
+            recommendation: "Continue with current treatment.",
+          },
+        },
+        {
+          id: 2,
+          status: " neonorata",
+          title: "Consultatie Generala",
+          date: "2024-04-10",
+          time: "10:00 - 10:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Consultatie generala",
+          doctor: "Dr. Ion Popescu",
+          details: null,
+        },
+        {
+          id: 3,
+          status: "neconfirmata",
+          title: "Analize Laborator",
+          date: "2024-09-07",
+          time: "09:15 - 09:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Recoltare Sange Adulti",
+          doctor: "Asistent medical, Medic specialist, Analize Laborator",
+          details: null,
+        },
+        {
+          id: 4,
+          status: "confirmata",
+          title: "Analize Laborator",
+          date: "2024-10-08",
+          time: "09:15 - 09:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Recoltare Sange Adulti",
+          doctor: "Asistent medical, Medic specialist, Analize Laborator",
+          details: {
+            duration: "15 min",
+            observation: "Sample collected successfully.",
+            recommendation: "Results will be available in 2 days.",
+          },
+        },
+        {
+          id: 5,
+          status: " onorata",
+          title: "Control Ortopedie",
+          date: "2024-05-15",
+          time: "11:00 - 11:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Ortopedie",
+          doctor: "Dr. Alexandru Marinescu",
+          details: {
+            duration: "30 min",
+            observation: "Patient recovering well from surgery.",
+            recommendation: "Physiotherapy recommended.",
+          },
+        },
+        {
+          id: 6,
+          status: "Programare neonorata",
+          title: "Control Dermatologie",
+          date: "2024-06-20",
+          time: "12:00 - 12:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Dermatologie",
+          doctor: "Dr. Ana Ionescu",
+          details: null,
+        },
+        {
+          id: 7,
+          status: "neconfirmata",
+          title: "Consult Nutritie",
+          date: "2024-07-10",
+          time: "14:00 - 14:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Nutritie",
+          doctor: "Dr. Maria Popa",
+          details: null,
+        },
+        {
+          id: 8,
+          status: "confirmata",
+          date: "2024-08-12",
+          time: "14:00 - 14:30",
+          location: "Bucuresti Policlinica Baneasa",
+          specializare: "Nutritie",
+          doctor: "Dr. Maria Popa",
+          details: {
+            duration: "30 min",
+            observation: "Discussed dietary habits.",
+            recommendation: "Follow new diet plan.",
+          },
+        },
+      ]);
     }
   };
 
@@ -180,18 +286,6 @@ const Programari = () => {
               </Typography>
               <Divider />
 
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                  mt: 3,
-                }}
-              >
-                {selectedAppointment.title}
-              </Typography>
-              <Divider />
               <Typography
                 variant="h4"
                 gutterBottom

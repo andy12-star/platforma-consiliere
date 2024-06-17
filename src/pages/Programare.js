@@ -47,11 +47,11 @@ function Programare() {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          minHeight="80vh"
+          minHeight="60vh"
           textAlign="center"
           sx={{
             ml: 25,
-            mt: 6,
+            mt: 15,
             bgcolor: "#F0808040", // asta e culoarea cea mai buna
             padding: 10,
             borderRadius: 10,
@@ -71,41 +71,6 @@ function Programare() {
             Programare Medicală
           </Typography>
           <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
-            <StyledTextField
-              fullWidth
-              id="firstName"
-              name="firstName"
-              label="Nume"
-              value={formik.values.firstName}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.firstName && Boolean(formik.errors.firstName)
-              }
-              helperText={formik.touched.firstName && formik.errors.firstName}
-              margin="normal"
-            />
-            <StyledTextField
-              fullWidth
-              id="lastName"
-              name="lastName"
-              label="Prenume"
-              value={formik.values.lastName}
-              onChange={formik.handleChange}
-              error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-              helperText={formik.touched.lastName && formik.errors.lastName}
-              margin="normal"
-            />
-            <StyledTextField
-              fullWidth
-              id="phone"
-              name="phone"
-              label="Numar de telefon"
-              value={formik.values.phone}
-              onChange={formik.handleChange}
-              error={formik.touched.phone && Boolean(formik.errors.phone)}
-              helperText={formik.touched.phone && formik.errors.phone}
-              margin="normal"
-            />
             <StyledFormControl fullWidth margin="normal">
               <InputLabel id="specialization-label">Specializare</InputLabel>
               <Select
@@ -119,15 +84,17 @@ function Programare() {
                   Boolean(formik.errors.specialization)
                 }
               >
-                <MenuItem value={"Hipnoterapie"}>Hipnoterapie</MenuItem>
+                <MenuItem value={"Consiliere educationala"}>
+                  Consiliere educationala
+                </MenuItem>
+                <MenuItem value={"Consiliere profesionala"}>
+                  Consiliere profesionala
+                </MenuItem>
+                <MenuItem value={"Consiliere psihologica"}>
+                  Consiliere psihologica
+                </MenuItem>
+                <MenuItem value={"terapie online"}>Terapie online</MenuItem>
                 <MenuItem value={"Life Coaching"}>Life Coaching</MenuItem>
-                <MenuItem value={"Psihoterapie online"}>
-                  Psihoterapie online
-                </MenuItem>
-                <MenuItem value={"Consult"}>Consult</MenuItem>
-                <MenuItem value={"Consiliere vocationala"}>
-                  Consiliere vocationala
-                </MenuItem>
               </Select>
             </StyledFormControl>
             <StyledTextField
@@ -141,6 +108,18 @@ function Programare() {
               helperText={formik.touched.doctor && formik.errors.doctor}
               margin="normal"
             />
+            <StyledTextField
+              fullWidth
+              id="locatie"
+              name="locatie"
+              label="Locatie"
+              value={formik.values.locatie}
+              onChange={formik.handleChange}
+              error={formik.touched.locatie && Boolean(formik.errors.locatie)}
+              helperText={formik.touched.locatie && formik.errors.locatie}
+              margin="normal"
+            />
+
             <StyledTextField
               fullWidth
               id="appointmentDate"

@@ -8,13 +8,40 @@ function Servicii() {
       <section>
         <img src="ht.jpg" alt="hipnoterapie" />
         <div>
-          <h2>Hipnoterapia</h2>
+          <h2>Consiliere educationala</h2>
           <p>
-            Hipnoterapia este o tehnica psihoterapeutica ce poate usura si
-            scurta mult procesul de vindecare a persoanei prin accesarea
-            subconstientului. cunoasterea individuala vine in completarea
-            cunoasterii rationale si ne ajuta sa identificam resursele
-            interioare.
+            Ne dorim sa venim in ajutorul studentiilor , oferind ajutor in
+            alegerea studiilor de masterat si de doctorat, dar si in alegerea
+            oportunitatiilor educationale, cum ar fi stagii de practica sau
+            burse in strainatate.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <img src="c.jpg" alt="c" />
+        <div>
+          <h2>Consiliere psihologica</h2>
+          <p>
+            Dorim sa gasim solutii pentru depasirea anumitor situatii
+            problematice care pot afecta orice student pe intregul parcurs al
+            facultatii, luand in vedere: depasirea dificultatilor emotionale,
+            suport pentru autocunoastere, managementul stresului in sesiune si
+            multe altele.
+          </p>
+        </div>
+      </section>
+      <section>
+        <img src="cv.jpg" alt="cv" />
+        <div>
+          <h2>Consiliere profesionala</h2>
+          <p>
+            Ne dorim sa contribuim la planificarea traseului carierei
+            studentilor, concentrandu-ne pe: identificarea intereselor si
+            abilitatilor profesionale prin testari specifice, asistenta in
+            realizarea CV-urilor si a scrisorilor de motivatie, pregatirea
+            pentru inteviuri, identificarea oportunitatiilor de dezvoltare a
+            abilitatilor si competentelor necesare pe piata muncii.
           </p>
         </div>
       </section>
@@ -41,31 +68,6 @@ function Servicii() {
             subconstientului. cunoasterea individuala vine in completarea
             cunoasterii rationale si ne ajuta sa identificam resursele
             interioare.
-          </p>
-        </div>
-      </section>
-      <section>
-        <img src="c.jpg" alt="c" />
-        <div>
-          <h2>Consult</h2>
-          <p>
-            Consultul psihologic are ca scop identificarea stării de sănătate a
-            fiecărui client și propunerea unui plan de tratament potrivit. De
-            asemenea presupune îndrumarea către un anumit tip de intervenție
-            pentru restabilirea sănătății la acest nivel: psihoterapie sau
-            tratament medicamentos, sau ambele în paralel.
-          </p>
-        </div>
-      </section>
-      <section>
-        <img src="cv.jpg" alt="cv" />
-        <div>
-          <h2>Consiliere vocationala</h2>
-          <p>
-            Consilierea vocațională te ajută să descoperi cine ești, ce poți să
-            faci cu abilitățile și talentele tale, cum să obții ceea ce îți
-            dorești, făcând ceea ce îți place și te pasionează și construindu-ți
-            astfel propriul drum.
           </p>
         </div>
       </section>

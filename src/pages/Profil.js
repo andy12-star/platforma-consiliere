@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { Container, Typography, Divider, Box } from "@mui/material";
 import UserNav from "../components/UserNav";
 import styles from "./mainPages.module.css";
-
-const getUserData = () => {
-  return JSON.parse(localStorage.getItem("userData")) || {};
-};
+import { useAuth } from "../services/context/AuthContext";
 
 const Profil = () => {
-  const [userData, setUserData] = useState({});
-
-  useEffect(() => {
-    const data = getUserData();
-    setUserData(data);
-  }, []);
+  const { user } = useAuth();
 
   return (
     <main className={styles.mainPage}>
@@ -60,7 +51,7 @@ const Profil = () => {
                 marginBottom: "20px",
               }}
             >
-              Nume: {userData.clientFirstName || "N/A"}
+              Nume: {user.firstName}
             </Typography>
             <Divider />
             <Typography
@@ -75,7 +66,7 @@ const Profil = () => {
                 marginBottom: "20px",
               }}
             >
-              Prenume: {userData.clientLastName || "N/A"}
+              Prenume: {user.lastName}
             </Typography>
             <Divider />
             <Typography
@@ -90,7 +81,7 @@ const Profil = () => {
                 marginBottom: "20px",
               }}
             >
-              Data nașterii: {userData.dataNasterii || "N/A"}
+              Data nașterii: {user.dateOfBirth}
             </Typography>
             <Divider />
             <Typography
@@ -105,7 +96,7 @@ const Profil = () => {
                 marginBottom: "20px",
               }}
             >
-              Adresa de mail: {userData.clientEmail || "N/A"}
+              Adresa de mail: {user.username}
             </Typography>
             <Divider />
             <Typography
@@ -120,7 +111,7 @@ const Profil = () => {
                 marginBottom: "20px",
               }}
             >
-              Numar de telefon: {userData.clientPhoneNr || "N/A"}
+              Numar de telefon: {user.phoneNumber}
             </Typography>
             <Divider />
             <Typography
@@ -135,7 +126,7 @@ const Profil = () => {
                 marginBottom: "20px",
               }}
             >
-              Facultate: {userData.facultate || "N/A"}
+              Facultate: {user.faculty}
             </Typography>
             <Divider />
           </Box>
