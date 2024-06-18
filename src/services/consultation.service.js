@@ -1,24 +1,33 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
-const API_URL = "https://localhost:8081/consultation";
 
 class ConsultationService {
-  async getConsultationReport(appointmentId) {
+
+
+  async getConsultationForPatientId(patientId){
     try {
-      const response = await axios.get(
-        `${API_URL}/consultations/${appointmentId}`
-      );
+      const response = await axiosInstance.get('/consultation/patient/'+patientId);
       return response.data;
-    } catch (error) {
-      console.error("Failed to fetch consultation report", error);
+    }catch(error){
+      console.error("Fetching consultation for patiend id  failed",error);
+      throw error;
+    }
+  }
+
+  async getConsultationForDoctorId(doctorId){
+    try {
+      const response = await axiosInstance.get('/consultation/doctor/'+doctorId);
+      return response.data;
+    }catch(error){
+      console.error("Fetching consultation for doctor id  failed",error);
       throw error;
     }
   }
 
   async addConsultationReport(consultationData) {
     try {
-      const response = await axios.post(
-        `${API_URL}/consultations`,
+      const response = await axiosInstance().post(
+        `/consultation`,
         consultationData
       );
       return response.data;
@@ -30,8 +39,8 @@ class ConsultationService {
 
   async updateConsultationReport(appointmentId, consultationData) {
     try {
-      const response = await axios.put(
-        `${API_URL}/consultations/${appointmentId}`,
+      const response = await axiosInstance().put(
+        '/consultation/'+appointmentId,
         consultationData
       );
       return response.data;
@@ -43,8 +52,8 @@ class ConsultationService {
 
   async deleteConsultationReport(appointmentId) {
     try {
-      const response = await axios.delete(
-        `${API_URL}/consultations/${appointmentId}`
+      const response = await axiosInstance().delete(
+        '/consultation'+appointmentId
       );
       return response.data;
     } catch (error) {

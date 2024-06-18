@@ -63,16 +63,6 @@ const RaportCard = ({ appointment }) => {
     });
   };
 
-  const handleDeleteAppointment = async () => {
-    try {
-      await consulationServiceInstance.deleteConsultationReport(appointment.id);
-      // You might want to update the local state or refetch the appointments to reflect the changes
-      console.log("Appointment deleted:", appointment.id);
-    } catch (error) {
-      console.error("Failed to delete appointment", error);
-    }
-  };
-
   return (
     <Card
       sx={{

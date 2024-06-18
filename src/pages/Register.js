@@ -25,6 +25,7 @@ function Register() {
       .min(10, "Phone number too short")
       .max(10, "Phone number too long")
       .required("Invalid phone format"),
+    clientDateOfBirth:Yup.string().required("This field is required"),
     clientFaculty: Yup.string().required("This field is required"),
     clientPassword: Yup.string().required("This field is required"),
   });
@@ -35,6 +36,7 @@ function Register() {
       clientLastName: values.clientLastName,
       clientEmail: values.clientEmail,
       clientPhoneNr: values.clientPhoneNr,
+      clientDateOfBirth: values.clientDateOfBirth,
       clientPassword: values.clientPassword,
       clientFaculty: values.clientFaculty,
     };
@@ -63,7 +65,6 @@ function Register() {
             margin: 5,
             width: 800,
             textAlign: "center",
-            borderRadius: 4,
             boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
           }}
         >
@@ -216,7 +217,31 @@ function Register() {
                     value={props.values.clientFaculty}
                     onChange={props.handleChange}
                     onBlur={props.handleBlur}
-                  />
+                  /><Field
+                  sx={{ width: 400 }}
+                  as={StyledTextField}
+                  required
+                  label="Data Nasterii"
+                  id="fac-input"
+                  name="datOfBirth"
+                  type="text"
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  error={Boolean(
+                    props.touched.datOfBirth && props.errors.datOfBirth
+                  )}
+                  helperText={
+                    props.touched.datOfBirth &&
+                    props.errors.datOfBirth ? (
+                      <span style={{ fontSize: "1.5rem" }}>
+                          {props.errors.datOfBirth}
+                        </span>
+                    ) : null
+                  }
+                  value={props.values.datOfBirth}
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                />
                   <Field
                     sx={{ width: 400 }}
                     as={StyledTextField}

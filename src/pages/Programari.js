@@ -26,18 +26,11 @@ const Programari = () => {
     useState(false);
   const [appointments, setAppointments] = useState([]);
 
-  useEffect(() => {
-    if (user && user.id) {
-      fetchAppointmentsForUser(user.id);
-      // Uncomment the below lines to fetch appointments for patient and doctor as well
-      // fetchAppointmentsForPatient(user.patientId);
-      // fetchAppointmentsForDoctor(user.doctorId);
-    }
-  }, [user]);
 
-  const fetchAppointmentsForUser = async (userId) => {
+
+  const fetchAppointmentsForPatient = async (userId) => {
     try {
-      const appointmentsData = await AppointmentService.getAppointmentsForUser(
+      const appointmentsData = await AppointmentService.getAppointmentsForPatient(
         userId
       );
       setAppointments(appointmentsData);
@@ -46,25 +39,14 @@ const Programari = () => {
     }
   };
 
-  const fetchAppointmentsForPatient = async (patientId) => {
-    try {
-      const appointmentsData =
-        await AppointmentService.getAppointmentsForPatient(patientId);
-      setAppointments(appointmentsData);
-    } catch (error) {
-      console.error("Failed to fetch appointments for patient", error);
+  useEffect(() => {
+    if (user && user.id) {
+      fetchAppointmentsForPatient(user.id);
+      // Uncomment the below lines to fetch appointments for patient and doctor as well
+      // fetchAppointmentsForPatient(user.patientId);
+      // fetchAppointmentsForDoctor(user.doctorId);
     }
-  };
-
-  const fetchAppointmentsForDoctor = async (doctorId) => {
-    try {
-      const appointmentsData =
-        await AppointmentService.getAppointmentsForDoctor(doctorId);
-      setAppointments(appointmentsData);
-    } catch (error) {
-      console.error("Failed to fetch appointments for doctor", error);
-    }
-  };
+  }, [user]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -146,7 +128,7 @@ const Programari = () => {
   const handleDeleteAppointment = async () => {
     try {
       await AppointmentService.deleteAppointment(selectedAppointment.id);
-      fetchAppointmentsForUser(user.id); // Refresh the appointments list
+      fetchAppointmentsForPatient(user.id); // Refresh the appointments list
       setOpen(false);
     } catch (error) {
       console.error("Failed to delete appointment", error);

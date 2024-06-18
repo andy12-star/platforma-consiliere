@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -14,47 +14,36 @@ import {
 import { useNavigate } from "react-router-dom";
 import UserNav from "../components/UserNav";
 import styles from "./mainPages.module.css";
+import { useAuth } from "../services/context/AuthContext";
+import PatientService from "../services/patient.service";
 
-const patients = [
-  {
-    firstName: "Ion",
-    lastName: "Popescu",
-    email: "ion.popescu@example.com",
-    phone: "1234567890",
-    birthDate: "1990-04-07",
-    faculty: "Medicina Generala",
-    userId: "001",
-  },
-  {
-    firstName: "Maria",
-    lastName: "Ionescu",
-    email: "maria.ionescu@example.com",
-    phone: "0987654321",
-    birthDate: "1985-06-15",
-    faculty: "Pediatrie",
-    userId: "002",
-  },
-];
-
-const calculateAge = (birthDate) => {
-  const today = new Date();
-  const birthDateObj = new Date(birthDate);
-  let age = today.getFullYear() - birthDateObj.getFullYear();
-  const monthDifference = today.getMonth() - birthDateObj.getMonth();
-  if (
-    monthDifference < 0 ||
-    (monthDifference === 0 && today.getDate() < birthDateObj.getDate())
-  ) {
-    age--;
-  }
-  return age;
-};
 
 const Pacienti = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [patients, setPatients] = useState([]);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const data = await PatientService.getPatientsForDoctor(user.id);
+        setPatients(data);
+      } catch (error) {
+        console.error("Failed to fetch patients", error);
+      }
+    };
+
+    if (user?.id) {
+      fetchPatients();
+    }
+  }, [user]);
+
 
   const handlePatientClick = (patient) => {
-    navigate(`/patient-details/${patient.userId}`, { state: { patient } });
+
+    console.log("pacient:");
+    console.log(patient);
+    navigate(`/patient-details/${patient.id}`, { state: { patient } });
   };
 
   return (
@@ -143,7 +132,7 @@ const Pacienti = () => {
                           fontFamily: "Times New Roman, Times, serif",
                         }}
                       >
-                        Varsta
+                        Data de nastere
                       </Typography>
                     </TableCell>
                     <TableCell>
@@ -157,17 +146,7 @@ const Pacienti = () => {
                         Facultate
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="h4"
-                        sx={{
-                          fontWeight: "bold",
-                          fontFamily: "Times New Roman, Times, serif",
-                        }}
-                      >
-                        Cod utilizator
-                      </Typography>
-                    </TableCell>
+
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -186,21 +165,18 @@ const Pacienti = () => {
                         <Typography variant="h5">{patient.lastName}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="h5">{patient.email}</Typography>
+                        <Typography variant="h5">{patient.username}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="h5">{patient.phone}</Typography>
+                        <Typography variant="h5">{patient.phoneNumber}</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="h5">
-                          {calculateAge(patient.birthDate)}
+                          {patient.dateOfBirth}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="h5">{patient.faculty}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="h5">{patient.userId}</Typography>
                       </TableCell>
                     </TableRow>
                   ))}

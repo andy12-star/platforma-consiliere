@@ -1,20 +1,12 @@
 import axiosInstance from "./axiosInstance";
 
 class AppointmentService {
-  async getAppointments() {
-    try {
-      const response = await axiosInstance.get(`/appointment`);
-      return response.data;
-    } catch (error) {
-      console.error("Fetching appointments failed", error);
-      throw error;
-    }
-  }
+
+
 
   async getAppointmentsForPatient(patientId) {
     try {
-      const response = await axiosInstance.get(
-        `/appointment/patient/${patientId}`
+      const response = await axiosInstance.get('/appointment/patient/'+patientId
       );
       return response.data;
     } catch (error) {
@@ -26,8 +18,7 @@ class AppointmentService {
   async getAppointmentsForDoctor(doctorId) {
     try {
       const response = await axiosInstance.get(
-        `/appointemnt/doctor/${doctorId}`
-      );
+        '/appointment/doctor/'+doctorId      );
       return response.data;
     } catch (error) {
       console.error("Fetching appointments for doctor failed", error);
@@ -48,9 +39,7 @@ class AppointmentService {
   async updateAppointment(appointmentId, updatedAppointment) {
     try {
       const response = await axiosInstance.put(
-        `/appointment/${appointmentId}`,
-        updatedAppointment
-      );
+        '/appointment/'+appointmentId,updatedAppointment);
       return response.data;
     } catch (error) {
       console.error("Updating appointment failed", error);
@@ -61,14 +50,15 @@ class AppointmentService {
   async deleteAppointment(appointmentId) {
     try {
       const response = await axiosInstance.delete(
-        `/appointment/${appointmentId}`
-      );
+        '/appointment/'+appointmentId      );
       return response.data;
     } catch (error) {
       console.error("Deleting appointment failed", error);
       throw error;
     }
   }
+
+
 }
 
 const appointmentServiceInstance = new AppointmentService();
