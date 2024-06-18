@@ -13,11 +13,9 @@ export default function Home() {
               fontFamily: "Times New Roman, Times, serif",
             }}
           >
-            welcome to therapy!
+            Welcome to therapy!
           </h1>
         </container>
-        <h2>ceva ceva ceva</h2>
-        {/*poate aici sa bagam chatul anonim?*/}
       </section>
     </main>
   );

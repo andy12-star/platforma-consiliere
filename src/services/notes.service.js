@@ -1,13 +1,10 @@
 import axiosInstance from "./axiosInstance";
 
-const API_URL = "https://localhost:8081/api/v1/notes";
-
 class NotesService {
-
   //TODO: Change to getNotesForUser(userId)
   async getNotesForUser(userId) {
     try {
-      const response = await axiosInstance.get(`/notes/`+userId);
+      const response = await axiosInstance.get(`/notes/` + userId);
       return response.data;
     } catch (error) {
       console.error("Fetching notes failed", error);
@@ -27,7 +24,7 @@ class NotesService {
 
   async deleteNote(noteId) {
     try {
-      const response = await axiosInstance.delete(`/${noteId}`);
+      const response = await axiosInstance.delete(`/notes/${noteId}`);
       return response.data;
     } catch (error) {
       console.error("Deleting note failed", error);

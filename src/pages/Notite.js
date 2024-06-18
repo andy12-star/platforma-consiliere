@@ -31,7 +31,7 @@ const Notite = () => {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+  });
 
   const fetchNotes = async () => {
     try {
@@ -79,8 +79,6 @@ const Notite = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const groupedNotesByYear = Object.keys(notes).sort((a, b) => b - a);
 
   return (
     <main className={styles.mainPage}>

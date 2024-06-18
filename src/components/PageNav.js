@@ -15,10 +15,10 @@ function PageNav() {
           <NavLink to="/contact">Contact</NavLink>
         </li>
         <li>
-          <NavLink to="/login">Log in</NavLink>
+          <NavLink to="/register">Register</NavLink>
         </li>
         <li>
-          <NavLink to="/register">Register</NavLink>
+          <NavLink to="/login">Log in</NavLink>
         </li>
       </ul>
     </nav>

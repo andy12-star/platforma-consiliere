@@ -63,6 +63,8 @@ function Register() {
             margin: 5,
             width: 800,
             textAlign: "center",
+            borderRadius: 4,
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
           }}
         >
           <Formik
