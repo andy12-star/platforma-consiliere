@@ -251,6 +251,9 @@
 //
 // export default Programare;
 
+
+
+
 import React from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
@@ -282,15 +285,17 @@ function Programare() {
 
   const handleAppointment = async (values, actions) => {
     const newAppointment = {
-      userId: user.id,
+      patientId:user.id,
+      doctorId:user.id,
+      appointmentType:'UNCONFIRMED',
       specialization: values.specialization,
-      doctor: values.doctor,
       location: values.location,
       date: values.date,
     };
 
     try {
       await AppointmentService.addAppointment(newAppointment);
+      alert("Programarea a fost trimisa");
     } catch (error) {
       console.error("Failed to add appointment", error);
       actions.setFieldError("general", "Failed to schedule appointment");
@@ -335,7 +340,6 @@ function Programare() {
               doctor: "",
               location: "",
               date: "",
-              hour: "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleAppointment}
@@ -350,7 +354,8 @@ function Programare() {
                     as={Select}
                     labelId="specialization-label"
                     id="specialization"
-                    name="specialization"
+                    name="specialization"InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     value={props.values.specialization}
                     onChange={props.handleChange}
                     error={
@@ -377,6 +382,8 @@ function Programare() {
                   id="doctor"
                   name="doctor"
                   label="Doctor"
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
                   value={props.values.doctor}
                   onChange={props.handleChange}
                   error={props.touched.doctor && Boolean(props.errors.doctor)}
@@ -389,6 +396,8 @@ function Programare() {
                   id="location"
                   name="location"
                   label="Locatie"
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
                   value={props.values.location}
                   onChange={props.handleChange}
                   error={
@@ -402,34 +411,18 @@ function Programare() {
                   fullWidth
                   id="date"
                   name="date"
-                  label="Data programare"
-                  type="date"
+                  label="Data si ora programare"
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
                   value={props.values.date}
                   onChange={props.handleChange}
                   error={props.touched.date && Boolean(props.errors.date)}
                   helperText={props.touched.date && props.errors.date}
                   margin="normal"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
+
                 />
-                <Field
-                  as={StyledTextField}
-                  fullWidth
-                  id="hour"
-                  name="hour"
-                  label="Ora preferata"
-                  type="time"
-                  value={props.values.hour}
-                  onChange={props.handleChange}
-                  error={props.touched.hour && Boolean(props.errors.hour)}
-                  helperText={props.touched.hour && props.errors.hour}
-                  margin="normal"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                <StyledButton type="submit" fullWidth sx={{ mt: 3 }}>
+
+                <StyledButton type='submit' fullWidth sx={{ mt: 8 }}>
                   Submit
                 </StyledButton>
                 {props.errors.general && (

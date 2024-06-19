@@ -26,7 +26,7 @@ class ConsultationService {
 
   async addConsultationReport(consultationData) {
     try {
-      const response = await axiosInstance().post(
+      const response = await axiosInstance.post(
         `/consultation`,
         consultationData
       );
@@ -39,7 +39,7 @@ class ConsultationService {
 
   async updateConsultationReport(appointmentId, consultationData) {
     try {
-      const response = await axiosInstance().put(
+      const response = await axiosInstance.put(
         '/consultation/'+appointmentId,
         consultationData
       );
@@ -52,7 +52,7 @@ class ConsultationService {
 
   async deleteConsultationReport(appointmentId) {
     try {
-      const response = await axiosInstance().delete(
+      const response = await axiosInstance.delete(
         '/consultation'+appointmentId
       );
       return response.data;

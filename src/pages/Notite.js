@@ -54,7 +54,6 @@ const Notite = () => {
     if (newNoteTitle.trim() === "" || newNoteText.trim() === "") return;
 
     const newNote = {
-      id: null,
       title: newNoteTitle,
       notes: newNoteText,
       userId: user.id,

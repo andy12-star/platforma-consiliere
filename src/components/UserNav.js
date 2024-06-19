@@ -67,7 +67,7 @@ function UserNav() {
   return (
     <nav className={styles.nav}>
       <ul>
-        {user && (user.roles[0].name === "role_admin" || user.roles[0].name === "role_patient") && (
+        {user && (user.roles[0].name === "role_admin" || user.roles[0].name === "role_user") && (
           <>
             <li>
               <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -124,9 +124,7 @@ function UserNav() {
                 </Menu>
               </Box>
             </li>
-            <li>
-              <NavLink to="/notite">Notite</NavLink>
-            </li>
+
             <li>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <NavLink to="#" onClick={handleOpenTestMenu}>
@@ -171,39 +169,32 @@ function UserNav() {
                 </Menu>
               </Box>
             </li>
-            <li>
-              <NavLink to="/programari">Programari</NavLink>
-            </li>
+
           </>
         )}
-        {user && (user.roles[0].name === "doctor" || user.roles[0].name) && (
+        {user && (user.roles[0].name === "role_doctor" || user.roles[0].name==="role_admin") && (
           <>
             <li>
               <NavLink to="/pacienti">Pacienti</NavLink>
             </li>
-            <li>
-              <NavLink to="/programari">Programari</NavLink>
-            </li>
+
             <li>
               <NavLink to="/rapoarte">Rapoarte</NavLink>
             </li>
           </>
         )}
-        {user && user.roles[0].name === "admin"  && (
+        {user && (user.roles[0].name === "role_doctor" || user.roles[0].name==="role_user" || user.roles[0].name==="role_admin") && (
           <>
             <li>
-              <NavLink to="/dashboard">Dashboard</NavLink>
+              <NavLink to="/programari">Programari</NavLink>
             </li>
             <li>
-              <NavLink to="/users">Users</NavLink>
-            </li>
-            <li>
-              <NavLink to="/settings">Settings</NavLink>
+              <NavLink to="/notite">Notite</NavLink>
             </li>
           </>
         )}
         <li>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box sx={{display: "flex", alignItems: "center", gap: 2 }}>
             <Typography variant="h6" component="div" sx={{ color: "black" }}>
               {clientName}
             </Typography>

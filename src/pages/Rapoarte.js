@@ -21,7 +21,7 @@ const appointments = [
     year: 2024,
     doctor: "Dr. Ion Popescu",
     details: {
-      duration: "30 min",
+      duration: "30",
       observation: "All good.",
       recommendation: "Continue with current treatment.",
     },

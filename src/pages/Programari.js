@@ -27,7 +27,6 @@ const Programari = () => {
   const [appointments, setAppointments] = useState([]);
 
 
-
   const fetchAppointmentsForPatient = async (userId) => {
     try {
       const appointmentsData = await AppointmentService.getAppointmentsForPatient(
@@ -42,9 +41,7 @@ const Programari = () => {
   useEffect(() => {
     if (user && user.id) {
       fetchAppointmentsForPatient(user.id);
-      // Uncomment the below lines to fetch appointments for patient and doctor as well
-      // fetchAppointmentsForPatient(user.patientId);
-      // fetchAppointmentsForDoctor(user.doctorId);
+
     }
   }, [user]);
 
@@ -135,6 +132,18 @@ const Programari = () => {
     }
   };
 
+  const handleCancelAppointment = async (appointmentId) => {
+    try {
+      const response = await AppointmentService.updateAppointment(appointmentId, { appointmentType: 'CANCELED' });
+      if (response) {
+        console.log('Appointment canceled successfully');
+      }
+    } catch (error) {
+      console.error('Failed to cancel the appointment', error);
+    }
+  };
+
+
   return (
     <main className={styles.mainPage}>
       <UserNav />
@@ -187,7 +196,7 @@ const Programari = () => {
                 }}
               >
                 {" "}
-                Programare {selectedAppointment.status}
+                Programare {selectedAppointment.appointmentType}
               </Typography>
               <Divider />
 
@@ -252,9 +261,11 @@ const Programari = () => {
                 Specializare:
               </Typography>
               <Typography variant="h4">
-                {selectedAppointment.specializare}
+                {selectedAppointment.specialization}
               </Typography>
               <Divider />
+              {(user.roles[0].name==="role_user") &&(
+                <>
               <Typography
                 variant="h4"
                 gutterBottom
@@ -266,7 +277,24 @@ const Programari = () => {
                 Doctor:
               </Typography>
               <Typography variant="h4">{selectedAppointment.doctor}</Typography>
-              <Divider />
+                </>
+            )}
+              {(user.roles[0].name==="role_doctor") &&(
+                <>
+                  <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                    }}
+                  >
+                    Pacient:
+                  </Typography>
+                  <Typography variant="h4">{selectedAppointment.patient}</Typography>
+                </>
+              )}
+          <Divider />
             </Box>
           ) : (
             <Box sx={{ p: 1 }}>
@@ -307,9 +335,19 @@ const Programari = () => {
                 >
                   Sterge Programare
                 </StyledButton>
+
+                <StyledButton
+                  onClick={handleCancelAppointment}
+                  color="secondary"
+                  sx={{
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Anuleaza Programare
+                </StyledButton>
               </>
             )}
-          {showNewAppointmentButton && (
+          {showNewAppointmentButton && (user.roles[0].name==="role_admin"|| user.roles[0].name==="role_user") &&(
             <StyledButton
               onClick={handleNewAppointment}
               color="primary"

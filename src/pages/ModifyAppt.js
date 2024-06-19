@@ -5,12 +5,13 @@ import UserNav from "../components/UserNav";
 import styles from "./mainPages.module.css";
 import { StyledButton } from "../components/styledComp";
 import AppointmentService from "../services/appointment.service";
+import {useAuth} from "../services/context/AuthContext";
 
 const ModifyAppt = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { appointment } = location.state;
-
+const {user}=useAuth();
   const [modifiedAppointment, setModifiedAppointment] = useState(appointment);
 
   const handleInputChange = (e) => {
@@ -82,6 +83,8 @@ const ModifyAppt = () => {
                 mb: 5,
               }}
             >
+              {(user.roles[0].name==="role_user") && (
+                <>
               <TextField
                 fullWidth
                 label="Data"
@@ -142,7 +145,38 @@ const ModifyAppt = () => {
                   style: { fontSize: "1.5rem" },
                 }}
               />
+                </>
+              )}
+              {(user.roles[0].name==="role_doctor") && appointment.appointmentType !== 'CANCELED' && (
+                <>
+                  <TextField
+                    fullWidth
+                    label="appointmentType"
+                    name="appointmentType"
+                    type="appointmentType"
+                    value={modifiedAppointment.date}
+                    onChange={handleInputChange}
+                    sx={{ mt: 3 }}
+                    InputProps={{
+                      style: { fontSize: "1.5rem" },
+                    }}
+                  > Modifica status programare</TextField>
+
+                </>
+              )}
+              {(user.roles[0].name==="role_doctor") && appointment.appointmentType === 'CANCELED' && (
+                <>
+                  <Typography variant ='h3' sx={{
+                    fontWeight: "bold",
+                    fontFamily: "Times New Roman, Times, serif",
+                  }}>
+                    ACEASTA PROGRAMARE NU POATE FI MODIFICATA DEOARECE A FOST ANULATA DE CATRE PACIENT!
+                  </Typography>
+                </>
+              )}
             </Box>
+
+
             <StyledButton
               onClick={handleSave}
               color="primary"

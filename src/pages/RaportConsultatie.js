@@ -9,8 +9,7 @@ const appointments = [
     doctor: "Dr. Bendu Domnica",
     specialty: "Medicina Generala",
     date: "08 Mai 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Hipertensiune arteriala",
+
     year: 2024,
     details: {
       trimisDe: "Bendu Domnica",
@@ -24,9 +23,7 @@ const appointments = [
   {
     doctor: "Prof. Univ. Dr. Sidenco Luminita Elena",
     specialty: "Recuperare Medicala",
-    date: "26 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Tendinita patelei Periartrita genunchi",
+
     year: 2023,
     details: {
       trimisDe: "Bendu Domnica",
@@ -41,8 +38,7 @@ const appointments = [
     doctor: "Dr. Bendu Domnica",
     specialty: "Medicina Generala",
     date: "15 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Alte examinari generale",
+
     year: 2023,
     details: {
       trimisDe: "Bendu Domnica",
@@ -57,8 +53,7 @@ const appointments = [
     doctor: "Prof. Univ. Dr. Sidenco Luminita Elena",
     specialty: "Recuperare Medicala",
     date: "09 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Tendinita patelei Periartrita genunchi",
+
     year: 2024,
     details: {
       trimisDe: "Bendu Domnica",
@@ -73,8 +68,7 @@ const appointments = [
     doctor: "Dr. Bendu Domnica",
     specialty: "Medicina Generala",
     date: "15 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Alte examinari generale",
+
     year: 2023,
     details: {
       trimisDe: "Bendu Domnica",
@@ -86,27 +80,9 @@ const appointments = [
     },
   },
   {
-    doctor: "Prof. Univ. Dr. Sidenco Luminita Elena",
-    specialty: "Recuperare Medicala",
-    date: "09 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Tendinita patelei Periartrita genunchi",
-    year: 2022,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
     doctor: "Dr. Bendu Domnica",
     specialty: "Medicina Generala",
     date: "15 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Alte examinari generale",
     year: 2024,
     details: {
       trimisDe: "Bendu Domnica",
@@ -117,54 +93,7 @@ const appointments = [
       diagnostic: "Hipertensiune arteriala",
     },
   },
-  {
-    doctor: "Prof. Univ. Dr. Sidenco Luminita Elena",
-    specialty: "Recuperare Medicala",
-    date: "09 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Tendinita patelei Periartrita genunchi",
-    year: 2024,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
-    doctor: "Dr. Bendu Domnica",
-    specialty: "Medicina Generala",
-    date: "15 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Alte examinari generale",
-    year: 2024,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
-    doctor: "Prof. Univ. Dr. Sidenco Luminita Elena",
-    specialty: "Recuperare Medicala",
-    date: "09 Apr 2024",
-    location: "Bucuresti Floreasca",
-    diagnosis: "Tendinita patelei Periartrita genunchi",
-    year: 2024,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
+
 ];
 
 const groupAppointmentsByYear = (appointments) => {
