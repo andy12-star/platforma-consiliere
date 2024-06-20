@@ -159,6 +159,7 @@ const ConsultCard = ({ doctor, date, details }) => {
           <DialogActions>
             <StyledButton
               onClick={handleClose}
+              variant="contained"
               sx={{
                 mr: 4,
                 mt: 3,

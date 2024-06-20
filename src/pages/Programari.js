@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  List,
 } from "@mui/material";
 import UserNav from "../components/UserNav";
 import { StyledCalendar, StyledButton } from "../components/styledComp";
@@ -15,23 +16,53 @@ import styles from "./mainPages.module.css";
 import AppointmentService from "../services/appointment.service";
 import { useAuth } from "../services/context/AuthContext";
 
+
+const holidays = [
+  { month: 0, day: 1 },
+  { month: 0, day: 2 },
+  { month: 3, day: 20 },
+  { month: 3, day: 21 },
+  { month: 3, day: 22 },
+  { month: 4, day: 1 },
+  { month: 5, day: 1 },
+  { month: 5, day: 24 },
+  { month: 7, day: 15 },
+  { month: 10, day: 30 },
+  { month: 11, day: 1 },
+  { month: 11, day: 25 },
+  { month: 11, day: 26 },
+];
+
+const isHoliday = (date) => {
+  return holidays.some(
+    (holiday) =>
+      holiday.day === date.getDate() &&
+      holiday.month === date.getMonth()
+  );
+};
+
 const Programari = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState("");
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [showNewAppointmentButton, setShowNewAppointmentButton] =
-    useState(false);
+  const [selectedAppointments, setSelectedAppointments] = useState([]);
+  const [showNewAppointmentButton, setShowNewAppointmentButton] = useState(false);
   const [appointments, setAppointments] = useState([]);
 
+  const fetchAppointmentsForDoctor = async (userId) => {
+    try {
+      const appointmentsData = await AppointmentService.getAppointmentsForDoctor(userId);
+      setAppointments(appointmentsData);
+    } catch (error) {
+      console.error("Failed to fetch appointments", error);
+    }
+  };
 
   const fetchAppointmentsForPatient = async (userId) => {
     try {
-      const appointmentsData = await AppointmentService.getAppointmentsForPatient(
-        userId
-      );
+      const appointmentsData = await AppointmentService.getAppointmentsForPatient(userId);
       setAppointments(appointmentsData);
     } catch (error) {
       console.error("Failed to fetch appointments", error);
@@ -40,19 +71,26 @@ const Programari = () => {
 
   useEffect(() => {
     if (user && user.id) {
-      fetchAppointmentsForPatient(user.id);
-
+      if (user.roles[0].name === "role_user") {
+        fetchAppointmentsForPatient(user.id);
+      } else if (user.roles[0].name === "role_doctor") {
+        fetchAppointmentsForDoctor(user.id);
+      }
     }
   }, [user]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    const appointment = appointments.find(
+    const filteredAppointments = appointments.filter(
       (appt) => new Date(appt.date).toDateString() === date.toDateString()
     );
     const currentDate = new Date();
     if (date < currentDate) {
-      if (!appointment) {
+      if (isHoliday(date)) {
+        setDialogContent("Clinica este închisă (Sărbătoare).");
+        setOpen(true);
+        setSelectedAppointments([]);
+      } else if (filteredAppointments.length === 0) {
         const day = date.getDay();
         if (day === 0 || day === 6) {
           setDialogContent("Clinica este închisă.");
@@ -60,14 +98,19 @@ const Programari = () => {
           setDialogContent("Nu există programare.");
         }
         setOpen(true);
-        setSelectedAppointment(null);
+        setSelectedAppointments([]);
       } else {
-        setSelectedAppointment(appointment);
+        setSelectedAppointments(filteredAppointments);
         setOpen(true);
         setShowNewAppointmentButton(false);
       }
     } else {
-      if (!appointment) {
+      if (isHoliday(date)) {
+        setDialogContent("Clinica este închisă (Sărbătoare).");
+        setOpen(true);
+        setSelectedAppointments([]);
+        setShowNewAppointmentButton(false);
+      } else if (filteredAppointments.length === 0) {
         const day = date.getDay();
         if (day === 0 || day === 6) {
           setDialogContent("Clinica este închisă.");
@@ -77,17 +120,20 @@ const Programari = () => {
           setShowNewAppointmentButton(true);
         }
         setOpen(true);
-        setSelectedAppointment(null);
+        setSelectedAppointments([]);
       } else {
-        setSelectedAppointment(appointment);
+        setSelectedAppointments(filteredAppointments);
         setOpen(true);
-        setShowNewAppointmentButton(false);
+        setShowNewAppointmentButton(true);
       }
     }
   };
 
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
+      if (isHoliday(date)) {
+        return "holiday";
+      }
       const appointment = appointments.find(
         (appt) => new Date(appt.date).toDateString() === date.toDateString()
       );
@@ -96,13 +142,13 @@ const Programari = () => {
         const currentDate = new Date();
 
         if (appointmentDate < currentDate) {
-          return appointment.status === "Programare onorata"
-            ? "appointment-onored"
-            : "appointment-not-onored";
+          return appointment.appointmentType === "HONORED"
+            ? "HONORED"
+            : "UNHONORED";
         } else if (appointmentDate > currentDate) {
-          return appointment.status === "neconfirmata"
-            ? "appointment-future-unconfirmed"
-            : "appointment-future-confirmed";
+          return appointment.appointmentType === "UNCONFIRMED"
+            ? "UNCONFIRMED"
+            : "CONFIRMED";
         }
       }
     }
@@ -116,16 +162,20 @@ const Programari = () => {
     navigate("/programare");
   };
 
-  const handleModifyAppointment = () => {
+  const handleModifyAppointment = (appointment) => {
     navigate("/modifica-programare", {
-      state: { appointment: selectedAppointment },
+      state: { appointment },
     });
   };
 
-  const handleDeleteAppointment = async () => {
+  const handleDeleteAppointment = async (appointmentId) => {
     try {
-      await AppointmentService.deleteAppointment(selectedAppointment.id);
-      fetchAppointmentsForPatient(user.id); // Refresh the appointments list
+      await AppointmentService.deleteAppointment(appointmentId);
+      if (user.roles[0].name === "role_user") {
+        fetchAppointmentsForPatient(user.id);
+      } else if (user.roles[0].name === "role_doctor") {
+        fetchAppointmentsForDoctor(user.id);
+      }
       setOpen(false);
     } catch (error) {
       console.error("Failed to delete appointment", error);
@@ -137,12 +187,23 @@ const Programari = () => {
       const response = await AppointmentService.updateAppointment(appointmentId, { appointmentType: 'CANCELED' });
       if (response) {
         console.log('Appointment canceled successfully');
+        if (user.roles[0].name === "role_user") {
+          fetchAppointmentsForPatient(user.id);
+        } else if (user.roles[0].name === "role_doctor") {
+          fetchAppointmentsForDoctor(user.id);
+        }
       }
     } catch (error) {
       console.error('Failed to cancel the appointment', error);
     }
   };
 
+
+  const getFormattedTime = (dateString) => {
+    const dateObj = new Date(dateString);
+    const options = { hour: '2-digit', minute: '2-digit' };
+    return dateObj.toLocaleTimeString('en-US', options);
+  };
 
   return (
     <main className={styles.mainPage}>
@@ -185,102 +246,35 @@ const Programari = () => {
         </Container>
       </Box>
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-        <DialogContent>
-          {selectedAppointment ? (
-            <Box sx={{ p: 1 }}>
-              <Typography
-                sx={{
-                  fontSize: "3.5rem",
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                }}
-              >
-                {" "}
-                Programare {selectedAppointment.appointmentType}
-              </Typography>
-              <Divider />
+        <DialogContent dividers={true} sx={{ maxHeight: '80vh' }}>
+          {selectedAppointments.length > 0 ? (
+            <List>
+              {selectedAppointments.map((appointment) => (
+                <Box key={appointment.id} sx={{ p: 1, mb: 2, borderBottom: '1px solid #ccc' }}>
+                  <Typography
+                    sx={{
+                      fontSize: "3.5rem",
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                    }}
+                  >
+                    {" "}
+                    Programare {appointment.appointmentType}
+                  </Typography>
+                  <Divider />
 
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                  mt: 3,
-                }}
-              >
-                {selectedAppointment.title}
-              </Typography>
-              <Divider />
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                }}
-              >
-                Data:
-              </Typography>
-              <Typography variant="h4">{selectedAppointment.date}</Typography>
-              <Divider />
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                }}
-              >
-                Ora:
-              </Typography>
-              <Typography variant="h4">{selectedAppointment.time}</Typography>
-              <Divider />
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                }}
-              >
-                Locatie:
-              </Typography>
-              <Typography variant="h4">
-                {selectedAppointment.location}
-              </Typography>
-              <Divider />
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                }}
-              >
-                Specializare:
-              </Typography>
-              <Typography variant="h4">
-                {selectedAppointment.specialization}
-              </Typography>
-              <Divider />
-              {(user.roles[0].name==="role_user") &&(
-                <>
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{
-                  fontWeight: "bold",
-                  fontFamily: "Times New Roman, Times, serif",
-                }}
-              >
-                Doctor:
-              </Typography>
-              <Typography variant="h4">{selectedAppointment.doctor}</Typography>
-                </>
-            )}
-              {(user.roles[0].name==="role_doctor") &&(
-                <>
+                  <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                      mt: 3,
+                    }}
+                  >
+                    {appointment.title}
+                  </Typography>
+                  <Divider />
                   <Typography
                     variant="h4"
                     gutterBottom
@@ -289,13 +283,107 @@ const Programari = () => {
                       fontFamily: "Times New Roman, Times, serif",
                     }}
                   >
-                    Pacient:
+                    Data:
                   </Typography>
-                  <Typography variant="h4">{selectedAppointment.patient}</Typography>
-                </>
-              )}
-          <Divider />
-            </Box>
+                  <Typography variant="h4">{appointment.date.split("T")[0]}</Typography>
+                  <Divider />
+                  <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                    }}
+                  >
+                    Ora:
+                  </Typography>
+                  <Typography variant="h4">{getFormattedTime(appointment.date)}</Typography>
+                  <Divider />
+                  <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                    }}
+                  >
+                    Locatie:
+                  </Typography>
+                  <Typography variant="h4">
+                    {appointment.location}
+                  </Typography>
+                  <Divider />
+                  <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                    }}
+                  >
+                    Specializare:
+                  </Typography>
+                  <Typography variant="h4">
+                    {appointment.specialization}
+                  </Typography>
+                  <Divider />
+                  {(user.roles[0].name === "role_user") && (
+                    <>
+                      <Typography
+                        variant="h4"
+                        gutterBottom
+                        sx={{
+                          fontWeight: "bold",
+                          fontFamily: "Times New Roman, Times, serif",
+                        }}
+                      >
+                        Doctor:
+                      </Typography>
+                      <Typography variant="h4">{appointment.doctor.firstName + " " + appointment.doctor.lastName}</Typography>
+                    </>
+                  )}
+                  {(user.roles[0].name === "role_doctor") && (
+                    <>
+                      <Typography
+                        variant="h4"
+                        gutterBottom
+                        sx={{
+                          fontWeight: "bold",
+                          fontFamily: "Times New Roman, Times, serif",
+                        }}
+                      >
+                        Pacient:
+                      </Typography>
+                      <Typography variant="h4">{appointment.patient}</Typography>
+                    </>
+                  )}
+                  <Divider />
+                  <StyledButton
+                    onClick={() => handleModifyAppointment(appointment)}
+                    color="primary"
+                    sx={{
+                      fontSize: "1.5rem",
+                      mt: 4,
+                      ml:29,
+                    }}
+                  >
+                    Modifica Programare
+                  </StyledButton>
+
+                  <StyledButton
+                    onClick={() => handleCancelAppointment(appointment.id)}
+                    color="secondary"
+                    sx={{
+                      fontSize: "1.5rem",
+                      mt: 4,
+                      ml:3
+                    }}
+                  >
+                    Anuleaza Programare
+                  </StyledButton>
+                </Box>
+              ))}
+            </List>
           ) : (
             <Box sx={{ p: 1 }}>
               <Typography
@@ -313,47 +401,13 @@ const Programari = () => {
           )}
         </DialogContent>
         <DialogActions>
-          {selectedAppointment &&
-            new Date(selectedAppointment.date) > new Date() && (
-              <>
-                <StyledButton
-                  onClick={handleModifyAppointment}
-                  color="primary"
-                  sx={{
-                    fontSize: "1.5rem",
-                  }}
-                >
-                  Modifica Programare
-                </StyledButton>
-
-                <StyledButton
-                  onClick={handleDeleteAppointment}
-                  color="secondary"
-                  sx={{
-                    fontSize: "1.5rem",
-                  }}
-                >
-                  Sterge Programare
-                </StyledButton>
-
-                <StyledButton
-                  onClick={handleCancelAppointment}
-                  color="secondary"
-                  sx={{
-                    fontSize: "1.5rem",
-                  }}
-                >
-                  Anuleaza Programare
-                </StyledButton>
-              </>
-            )}
-          {showNewAppointmentButton && (user.roles[0].name==="role_admin"|| user.roles[0].name==="role_user") &&(
+          {showNewAppointmentButton && (user.roles[0].name === "role_admin" || user.roles[0].name === "role_user") && (
             <StyledButton
               onClick={handleNewAppointment}
               color="primary"
               sx={{
-                mr: 55,
                 fontSize: "1.5rem",
+                mt:3,
               }}
             >
               Programare Nouă
@@ -363,8 +417,8 @@ const Programari = () => {
             onClick={handleClose}
             color="primary"
             sx={{
-              mr: 4,
               fontSize: "1.5rem",
+              mt:3,
             }}
           >
             Închide

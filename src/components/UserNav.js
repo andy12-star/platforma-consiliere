@@ -70,9 +70,9 @@ function UserNav() {
         {user && (user.roles[0].name === "role_admin" || user.roles[0].name === "role_user") && (
           <>
             <li>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{display: "flex", alignItems: "center"}}>
                 <NavLink to="#" onClick={handleOpenDosarMenu}>
-                  Dosar Medical <ArrowDropDownIcon />
+                  Dosar Medical <ArrowDropDownIcon/>
                 </NavLink>
                 <Menu
                   id="menu-dosar"
@@ -102,17 +102,17 @@ function UserNav() {
                         handleNavItemClick(page);
                         handleCloseDosarMenu();
                       }}
-                      sx={{ fontSize: "20px", py: 2 }}
+                      sx={{fontSize: "20px", py: 2}}
                     >
                       <ListItemIcon>
                         {page === "RapoarteConsultatie" ? (
-                          <DescriptionIcon fontSize="large" />
+                          <DescriptionIcon fontSize="large"/>
                         ) : (
-                          <AssignmentIcon fontSize="large" />
+                          <AssignmentIcon fontSize="large"/>
                         )}
                       </ListItemIcon>
                       <ListItemText
-                        primaryTypographyProps={{ fontSize: "20px" }}
+                        primaryTypographyProps={{fontSize: "20px"}}
                         primary={
                           page === "RapoarteConsultatie"
                             ? "Rapoarte consultatii"
@@ -126,9 +126,9 @@ function UserNav() {
             </li>
 
             <li>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{display: "flex", alignItems: "center"}}>
                 <NavLink to="#" onClick={handleOpenTestMenu}>
-                  Teste <ArrowDropDownIcon />
+                  Teste <ArrowDropDownIcon/>
                 </NavLink>
                 <Menu
                   id="menu-test"
@@ -158,16 +158,19 @@ function UserNav() {
                         handleNavItemClick(page);
                         handleCloseTestMenu();
                       }}
-                      sx={{ fontSize: "20px", py: 2 }}
+                      sx={{fontSize: "20px", py: 2}}
                     >
                       <ListItemText
-                        primaryTypographyProps={{ fontSize: "20px" }}
+                        primaryTypographyProps={{fontSize: "20px"}}
                         primary={page}
                       />
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
+            </li>
+            <li>
+              <NavLink to="/doctori">Doctori</NavLink>
             </li>
 
           </>

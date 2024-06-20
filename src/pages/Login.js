@@ -122,6 +122,7 @@ function Login() {
                   />
                   <StyledButton
                     type="submit"
+                    variant="contained"
                     sx={{ fontSize: "1.5rem", padding: "1em 2em" }}
                   >
                     Log in
@@ -129,6 +130,7 @@ function Login() {
                   {props.errors.general && (
                     <Typography
                       variant="body2"
+
                       style={{
                         color: "red",
                         marginTop: "1em",

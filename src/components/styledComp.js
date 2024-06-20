@@ -77,10 +77,10 @@ export const StyledCalendar = styled(Calendar)({
     background: "#6f48eb !important",
     color: "white !important",
   },
-  "& .appointment-onored": {
+  "& .HONORED": {
     backgroundColor: "green !important",
   },
-  "& .appointment-not-onored": {
+  "& .UNHONORED": {
     backgroundColor: "red !important",
   },
   "& .appointment-future": {
@@ -95,10 +95,19 @@ export const StyledCalendar = styled(Calendar)({
   "& .react-calendar__tile": {
     minHeight: "80px",
   },
-  "& .appointment-future-unconfirmed": {
-    backgroundColor: "orange !important",
+  "& .UNCONFIRMED": {
+    backgroundColor: "pink !important",
   },
-  "& .appointment-future-confirmed": {
+  "& .CONFIRMED": {
     backgroundColor: "blue !important",
   },
+  "& .CANCELED": {
+    backgroundColor: "pink !important",
+  },
+
+  "& .holiday": {
+    backgroundColor: "red !important",
+    color: "white !important",
+  },
+
 });

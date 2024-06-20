@@ -23,8 +23,13 @@ export const AuthProvider = ({ children }) => {
     await AuthService.register(registerValues);
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser)
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, register, setUser: updateUser }}>
       {children}
     </AuthContext.Provider>
   );

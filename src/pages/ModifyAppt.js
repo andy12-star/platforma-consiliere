@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Container, Typography, Box, TextField } from "@mui/material";
+import { Formik, Field, Form } from "formik";
+import {
+  Container,
+  Typography,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import UserNav from "../components/UserNav";
 import styles from "./mainPages.module.css";
-import { StyledButton } from "../components/styledComp";
+import { StyledTextField, StyledButton } from "../components/styledComp";
 import AppointmentService from "../services/appointment.service";
 import {useAuth} from "../services/context/AuthContext";
 
@@ -11,184 +20,206 @@ const ModifyAppt = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { appointment } = location.state;
-const {user}=useAuth();
-  const [modifiedAppointment, setModifiedAppointment] = useState(appointment);
+  const{user}=useAuth();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setModifiedAppointment({
-      ...modifiedAppointment,
-      [name]: value,
-    });
+const handleSave = async (values, actions) => {
+  const appointmentDateTime = `${values.date} ${values.hour}:00`;
+
+  const updatedAppointment = {
+    ...appointment,
+    specialization: values.specialization,
+    location: values.location,
+    date: appointmentDateTime,
+    doctor: values.doctor,
   };
 
-  const handleSave = async () => {
-    try {
-      await AppointmentService.updateAppointment(
-        modifiedAppointment.id,
-        modifiedAppointment
-      );
-      navigate("/programari");
-    } catch (error) {
-      console.error("Failed to update appointment", error);
-    }
-  };
+  try {
+    await AppointmentService.saveAppointment(updatedAppointment);
+    navigate("/programari");
+  } catch (error) {
+    console.error("Failed to save appointment", error);
+    actions.setFieldError("general", "Failed to save appointment");
+  }
+};
 
-  return (
-    <main className={styles.mainPage}>
-      <UserNav />
+return (
+  <main className={styles.mainPage}>
+    <UserNav />
+    <Container>
       <Box
         display="flex"
         flexDirection="column"
+        justifyContent="center"
         alignItems="center"
+        minHeight="60vh"
         textAlign="center"
-        sx={{ minHeight: "92vh", p: 1 }}
+        sx={{
+          ml: 25,
+          mt: 15,
+          bgcolor: "#F0808040",
+          padding: 10,
+          borderRadius: 10,
+          width: "85%",
+          maxWidth: 700,
+        }}
       >
-        <Container maxWidth="xl">
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            textAlign="center"
-            sx={{
-              mt: 5,
-              minHeight: "40vh",
-              bgcolor: "#ffff",
-              padding: 3,
-              borderRadius: 2,
-              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            <Typography
-              variant="h2"
-              marginBottom={2}
-              sx={{
-                mt: 5,
-                fontWeight: "bold",
-                fontFamily: "Times New Roman, Times, serif",
-              }}
-            >
-              Modifica programarea
-            </Typography>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              textAlign="center"
-              sx={{
-                minHeight: "30vh",
-                width: "80vh",
-                bgcolor: "#F0808040",
-                p: 1,
-                mb: 5,
-              }}
-            >
-              {(user.roles[0].name==="role_user") && (
+        <Typography
+          variant="h2"
+          component="h1"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            fontFamily: "Times New Roman, Times, serif",
+          }}
+        >
+          Modifica Programare
+        </Typography>
+        <Formik
+          initialValues={{
+            specialization: appointment.specialization || "",
+            doctor: appointment.doctor || "",
+            location: appointment.location || "",
+            date: appointment.date.split("T")[0],
+            hour: appointment.date.split("T")[1].substring(0, 5),
+          }}
+          onSubmit={handleSave}
+        >
+          {(props) => (
+
+
+
+            <Form>
+              {(user.roles[0].name ==="role_user")&&(
                 <>
-              <TextField
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="specialization-label">
+                  Specializare
+                </InputLabel>
+                <Field
+                  as={Select}
+                  labelId="specialization-label"
+                  id="specialization"
+                  name="specialization"
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  value={props.values.specialization}
+                  onChange={props.handleChange}
+                >
+                  <MenuItem value={"Consiliere educationala"} sx={{ fontSize: "1.5rem" }}>
+                    Consiliere educationala
+                  </MenuItem>
+                  <MenuItem value={"Consiliere profesionala"} sx={{ fontSize: "1.5rem" }}>
+                    Consiliere profesionala
+                  </MenuItem>
+                  <MenuItem value={"Consiliere psihologica"} sx={{ fontSize: "1.5rem" }}>
+                    Consiliere psihologica
+                  </MenuItem>
+                  <MenuItem value={"terapie online"} sx={{ fontSize: "1.5rem" }}>
+                    Terapie online
+                  </MenuItem>
+                  <MenuItem value={"Life Coaching"} sx={{ fontSize: "1.5rem" }}>
+                    Life Coaching
+                  </MenuItem>
+                </Field>
+              </FormControl>
+              <Field
+                as={StyledTextField}
                 fullWidth
-                label="Data"
-                name="date"
-                type="date"
-                value={modifiedAppointment.date}
-                onChange={handleInputChange}
-                sx={{ mt: 3 }}
-                InputProps={{
-                  style: { fontSize: "1.5rem" },
-                }}
+                id="doctor"
+                name="doctor"
+                label="Doctor"
+                InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                InputProps={{ style: { fontSize: "1.5rem" } }}
+                value={props.values.doctor}
+                onChange={props.handleChange}
+                margin="normal"
               />
-              <TextField
+              <Field
+                as={StyledTextField}
                 fullWidth
-                label="Ora"
-                name="time"
-                type="time"
-                value={modifiedAppointment.time}
-                onChange={handleInputChange}
-                sx={{ mt: 3 }}
+                id="location"
+                name="location"
+                label="Locatie"
+                InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                InputProps={{ style: { fontSize: "1.5rem" } }}
+                value={props.values.location}
+                onChange={props.handleChange}
+                margin="normal"
+              />
+              <Field
+                as={StyledTextField}
+                fullWidth
+                id="date"
+                name="date"
+                label="Data"
+                type="date"
+                InputProps={{ style: { fontSize: "1.5rem" } }}
+                value={props.values.date}
+                onChange={props.handleChange}
+                margin="normal"
                 InputLabelProps={{
                   shrink: true,
-                }}
-                InputProps={{
                   style: { fontSize: "1.5rem" },
                 }}
               />
-              <TextField
+              <Field
+                as={StyledTextField}
                 fullWidth
-                label="Locatie"
-                name="location"
-                value={modifiedAppointment.location}
-                onChange={handleInputChange}
-                sx={{ mt: 3 }}
-                InputProps={{
+                id="hour"
+                name="hour"
+                label="Ora preferata"
+                type="time"
+                InputProps={{ style: { fontSize: "1.5rem" } }}
+                value={props.values.hour}
+                onChange={props.handleChange}
+                margin="normal"
+                InputLabelProps={{
+                  shrink: true,
                   style: { fontSize: "1.5rem" },
                 }}
               />
-              <TextField
-                fullWidth
-                label="Specializare"
-                name="specializare"
-                value={modifiedAppointment.specializare}
-                onChange={handleInputChange}
-                sx={{ mt: 3 }}
-                InputProps={{
-                  style: { fontSize: "1.5rem" },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Doctor"
-                name="doctor"
-                value={modifiedAppointment.doctor}
-                onChange={handleInputChange}
-                sx={{ mt: 3 }}
-                InputProps={{
-                  style: { fontSize: "1.5rem" },
-                }}
-              />
-                </>
+              </>
               )}
-              {(user.roles[0].name==="role_doctor") && appointment.appointmentType !== 'CANCELED' && (
+              {(user.roles[0].name ==="role_doctor")&&(
                 <>
-                  <TextField
+                  <Field
+                    as={StyledTextField}
                     fullWidth
-                    label="appointmentType"
+                    id="appointmentType"
                     name="appointmentType"
-                    type="appointmentType"
-                    value={modifiedAppointment.date}
-                    onChange={handleInputChange}
-                    sx={{ mt: 3 }}
-                    InputProps={{
+                    label="Statusul programarii"
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
+                    value={props.values.appointmentType}
+                    onChange={props.handleChange}
+                    margin="normal"
+                    InputLabelProps={{
+                      shrink: true,
                       style: { fontSize: "1.5rem" },
                     }}
-                  > Modifica status programare</TextField>
-
-                </>
+                  />
+                </>)}
+              <StyledButton type="submit" fullWidth sx={{ mt: 3 }}>
+                Salvează Modificările
+              </StyledButton>
+              {props.errors.general && (
+                <Typography
+                  variant="body2"
+                  style={{
+                    color: "red",
+                    marginTop: "1em",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {props.errors.general}
+                </Typography>
               )}
-              {(user.roles[0].name==="role_doctor") && appointment.appointmentType === 'CANCELED' && (
-                <>
-                  <Typography variant ='h3' sx={{
-                    fontWeight: "bold",
-                    fontFamily: "Times New Roman, Times, serif",
-                  }}>
-                    ACEASTA PROGRAMARE NU POATE FI MODIFICATA DEOARECE A FOST ANULATA DE CATRE PACIENT!
-                  </Typography>
-                </>
-              )}
-            </Box>
-
-
-            <StyledButton
-              onClick={handleSave}
-              color="primary"
-              sx={{ fontSize: "1.5rem", mt: 3 }}
-            >
-              Salvează Modificările
-            </StyledButton>
-          </Box>
-        </Container>
+            </Form>
+          )}
+        </Formik>
       </Box>
-    </main>
-  );
+    </Container>
+  </main>
+);
 };
 
 export default ModifyAppt;

@@ -95,9 +95,8 @@ const ModifyConsult = () => {
                 value={modifiedConsult.duration}
                 onChange={handleInputChange}
                 sx={{ mt: 3 }}
-                InputProps={{
-                  style: { fontSize: "1.5rem" },
-                }}
+                InputLabelProps={{ style: { fontSize: "2rem" } }}
+                InputProps={{ style: { fontSize: "2rem" } }}
               />
               <TextField
                 fullWidth
@@ -106,23 +105,20 @@ const ModifyConsult = () => {
                 value={modifiedConsult.observation}
                 onChange={handleInputChange}
                 sx={{ mt: 3 }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  style: { fontSize: "1.5rem" },
-                }}
+
+                InputLabelProps={{ style: { fontSize: "2rem" } }}
+                InputProps={{ style: { fontSize: "2rem" } }}
               />
               <TextField
+
                 fullWidth
                 label="Recomandari"
                 name="recommendation"
                 value={modifiedConsult.recommendation}
                 onChange={handleInputChange}
                 sx={{ mt: 3 }}
-                InputProps={{
-                  style: { fontSize: "1.5rem" },
-                }}
+                InputLabelProps={{ style: { fontSize: "2rem" } }}
+                InputProps={{ style: { fontSize: "2rem" } }}
               />
             </Box>
             <StyledButton

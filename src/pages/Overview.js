@@ -19,7 +19,7 @@ const {user}=useAuth();
   const handleButtonClick = () => {
     navigate("/programare");
   };
-
+  const clientName = user?.firstName + " " + user?.lastName;
   return (
     <main className={styles.overview}>
       <UserNav/>
@@ -32,12 +32,12 @@ const {user}=useAuth();
               fontFamily: "Times New Roman, Times, serif",
             }}
           >
-            Welcome to your Dashboard!
+           Bine ai venit, {clientName}!
           </h1>
         </container>
-        {(user.roles[0].name === "role_patient")&& (
+        {(user.roles[0].name === "role_user")&& (
         <>
-          <StyledButton onClick={handleButtonClick} sx={{mt: 1}}>
+          <StyledButton onClick={handleButtonClick} sx={{mt: 1,fontSize:"2.5rem"}}>
           Solicita o programare
         </StyledButton>
         </>

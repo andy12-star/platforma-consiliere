@@ -143,6 +143,7 @@ const TestSMI = () => {
                 mt: 3,
               }}
               onClick={handleSubmit}
+              variant="contained"
             >
               Submit questions
             </StyledButton>

@@ -19,8 +19,10 @@ import RezultateTeste from "./pages/RezultateTeste";
 import Notite from "./pages/Notite";
 import Profil from "./pages/Profil";
 import Pacienti from "./pages/Pacienti";
+import Doctori from "./pages/Doctori";
 import Rapoarte from "./pages/Rapoarte";
 import PatientDetails from "./pages/PacientDetails";
+import DoctorDetails from "./pages/DoctorDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ModifyAppt from "./pages/ModifyAppt";
 import ModifyConsult from "./pages/ModifyConsult";
@@ -49,8 +51,10 @@ function App() {
             <Route path="rezultateteste" element={<ProtectedRoute><RezultateTeste/></ProtectedRoute>}/>
             <Route path="notite" element={<ProtectedRoute><Notite/></ProtectedRoute>}/>
             <Route path="profil" element={<ProtectedRoute><Profil/></ProtectedRoute>}/>
+            <Route path="doctori" element={<ProtectedRoute><Doctori/></ProtectedRoute>}/>
             <Route path="pacienti" element={<ProtectedRoute><Pacienti/></ProtectedRoute>}/>
             <Route path="rapoarte" element={<ProtectedRoute><Rapoarte/></ProtectedRoute>}/>
+            <Route path="doctor-details/:id" element={<ProtectedRoute><DoctorDetails/></ProtectedRoute>}/>
             <Route path="patient-details/:id" element={<ProtectedRoute><PatientDetails/></ProtectedRoute>}/>
             <Route path="/modifica-programare" element={<ModifyAppt />} />
             <Route path="/modifica-consultatie" element={<ModifyConsult />} />

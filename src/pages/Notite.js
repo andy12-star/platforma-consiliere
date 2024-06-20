@@ -122,6 +122,7 @@ const Notite = () => {
           >
             <StyledButton
               onClick={handleClickOpen}
+              variant="contained"
               sx={{
                 mt: 3,
                 mb: 3,

@@ -147,6 +147,7 @@ function Contact() {
                   />
                   <StyledButton
                     type="submit"
+                    variant="contained"
                     sx={{ fontSize: "1.5rem", padding: "1em 2em" }}
                   >
                     Submit
@@ -175,14 +176,7 @@ function Contact() {
         alignItems="center"
         height="50px"
       >
-        <StyledButton
-          sx={{
-            backgroundColor: "#ffffff",
-            // link catre chat anonim
-          }}
-        >
-          Contact Anonim
-        </StyledButton>
+
       </Box>
     </main>
   );

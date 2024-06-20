@@ -146,10 +146,12 @@ const TestPersonalitate = () => {
               </Box>
             ))}
             <StyledButton
+              onClick={handleSubmit}
+              variant="contained"
               sx={{
                 mt: 3,
               }}
-              onClick={handleSubmit}
+
             >
               Submit questions
             </StyledButton>

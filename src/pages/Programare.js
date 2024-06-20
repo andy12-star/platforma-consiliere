@@ -1,279 +1,45 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   Container,
-//   Typography,
-//   Box,
-//   TextField,
-//   Dialog,
-//   DialogActions,
-//   DialogContent,
-//   DialogTitle,
-// } from "@mui/material";
-// import UserNav from "../components/UserNav";
-// import { StyledButton } from "../components/styledComp";
-// import styles from "./mainPages.module.css";
-// import { useAuth } from "../services/context/AuthContext";
-// import AppointmentService from "../services/appointment.service";
-//
-// const Programare = () => {
-//   const [appointments, setAppointments] = useState([]);
-//   const [newSpecialization, setNewSpecialization] = useState("");
-//   const [newDoctor, setNewDoctor] = useState("");
-//   const[newLocation, setNewLocation]=useState("");
-//   const[newDate, setNewDate]=useState("");
-//   const[newHour, setNewHour]=useState("");
-//
-//
-//   const [open, setOpen] = useState(false);
-//
-//   const { user } = useAuth();
-//
-//
-//
-//
-//   const handleSpecializationChange = (e) => {
-//     setNewSpecialization(e.target.value);
-//   };
-//
-//   const handleDoctorChange = (e) => {
-//     setNewDoctor(e.target.value);
-//   };
-//
-//   const handleLocationChange = (e) => {
-//     setNewLocation(e.target.value);
-//   };
-//
-//   const handleDateChange = (e) => {
-//     setNewDate(e.target.value);
-//   };
-//
-//   const handleHourChange = (e) => {
-//     setNewHour(e.target.value);
-//   };
-//
-//   const handleAddAppointment = async () => {
-//
-//     const newAppointment = {
-//       id: null,
-//       specialization:newSpecialization,
-//       doctor:newDoctor,
-//       location:newLocation,
-//       date:newDate,
-//       hour:newHour,
-//       userId: user.id,
-//     };
-//
-//     try {
-//       await AppointmentService.addAppointment(newAppointment);
-//       const updatedAppointments = await AppointmentService.getAppointmentsForPatient(user.id);
-//       setAppointments(updatedAppointments);
-//       setNewSpecialization("");
-//         setNewDoctor("");
-//         setNewLocation("");
-//         setNewDate("");
-//         setNewHour("");
-//
-//       setOpen(false);
-//     } catch (error) {
-//       console.error("Failed to add appointment", error);
-//     }
-//   };
-//
-//   const handleClickOpen = () => {
-//     setOpen(true);
-//   };
-//
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-//
-//   return (
-//     <main className={styles.mainPage}>
-//       <UserNav />
-//       <Box
-//         display="flex"
-//         flexDirection="column"
-//         alignItems="center"
-//         textAlign="center"
-//         sx={{
-//           minHeight: "92vh",
-//           p: 1,
-//         }}
-//       >
-//         <Container maxWidth="xl">
-//           <Typography
-//             variant="h2"
-//             gutterBottom
-//             sx={{
-//               mt: 4,
-//               fontWeight: "bold",
-//               fontFamily: "Times New Roman, Times, serif",
-//             }}
-//           >
-//             programare
-//           </Typography>
-//           <Box
-//             display="flex"
-//             flexDirection="column"
-//             alignItems="center"
-//             marginTop={4}
-//             textAlign="center"
-//             sx={{
-//               minHeight: "92vh",
-//               p: 3,
-//               bgcolor: "#ffffff",
-//               padding: 3,
-//               borderRadius: 2,
-//
-//               boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-//             }}
-//           >
-//             <StyledButton
-//               onClick={handleClickOpen}
-//               sx={{
-//                 mt: 3,
-//                 mb: 3,
-//               }}
-//             >
-//               Adauga PROGRAMARE
-//             </StyledButton>
-//
-//             <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-//               <DialogTitle
-//                 sx={{
-//                   fontSize: "2.5rem",
-//                   fontWeight: "bold",
-//                   fontFamily: "Times New Roman, Times, serif",
-//                 }}
-//               >
-//                 Adauga Notita
-//               </DialogTitle>
-//               <DialogContent>
-//                 <TextField
-//                   autoFocus
-//                   margin="dense"
-//                   label={
-//                     <Typography variant="h6" sx={{ fontSize: "2rem" }}>
-//                       specializare
-//                     </Typography>
-//                   }
-//                   fullWidth
-//                   value={newSpecialization}
-//                   onChange={handleSpecializationChange}
-//                   InputProps={{
-//                     style: { fontSize: "1.5rem" },
-//                   }}
-//                 />
-//                 <TextField
-//                   autoFocus
-//                   margin="dense"
-//                   label={
-//                     <Typography variant="h6" sx={{ fontSize: "2rem" }}>
-//                       doctor
-//                     </Typography>
-//                   }
-//                   fullWidth
-//                   value={newDoctor}
-//                   onChange={handleDoctorChange}
-//                   InputProps={{
-//                     style: { fontSize: "1.5rem" },
-//                   }}
-//                 />
-//                 <TextField
-//                   autoFocus
-//                   margin="dense"
-//                   label={
-//                     <Typography variant="h6" sx={{ fontSize: "2rem" }}>
-//                       location
-//                     </Typography>
-//                   }
-//                   fullWidth
-//                   value={newLocation}
-//                   onChange={handleLocationChange}
-//                   InputProps={{
-//                     style: { fontSize: "1.5rem" },
-//                   }}
-//                 />
-//                 <TextField
-//                   autoFocus
-//                   margin="dense"
-//                   label={
-//                     <Typography variant="h6" sx={{ fontSize: "2rem" }}>
-//                       date
-//                     </Typography>
-//                   }
-//                   fullWidth
-//                   value={newDate}
-//                   onChange={handleDateChange}
-//                   InputProps={{
-//                     style: { fontSize: "1.5rem" },
-//                   }}
-//                 />
-//                 <TextField
-//                   autoFocus
-//                   margin="dense"
-//                   label={
-//                     <Typography variant="h6" sx={{ fontSize: "2rem" }}>
-//                       hour
-//                     </Typography>
-//                   }
-//                   fullWidth
-//                   value={newHour}
-//                   onChange={handleHourChange}
-//                   InputProps={{
-//                     style: { fontSize: "1.5rem" },
-//                   }}
-//                 />
-//               </DialogContent>
-//               <DialogActions>
-//                 <StyledButton
-//                   onClick={handleClose}
-//                   color="primary"
-//                   sx={{ fontSize: "1.5rem", mr: 3 }}
-//                 >
-//                   Cancel
-//                 </StyledButton>
-//                 <StyledButton
-//                   onClick={handleAddAppointment()}
-//                   color="primary"
-//                   sx={{ fontSize: "1.5rem", mr: 3 }}
-//                 >
-//                   Adauga
-//                 </StyledButton>
-//               </DialogActions>
-//             </Dialog>
-//           </Box>
-//         </Container>
-//       </Box>
-//     </main>
-//   );
-// };
-//
-// export default Programare;
-
-
-
-
-import React from "react";
-import { Formik, Field, Form } from "formik";
+import React, {useEffect, useState} from "react";
+import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
-import {
-  Box,
-  Typography,
-  MenuItem,
-  InputLabel,
-  Select,
-  FormControl,
-} from "@mui/material";
+import {Box, FormControl, InputLabel, MenuItem, Select, Typography,} from "@mui/material";
 import UserNav from "../components/UserNav";
-import { StyledTextField, StyledButton } from "../components/styledComp";
+import {StyledButton, StyledTextField} from "../components/styledComp";
 import styles from "./mainPages.module.css";
-import { Container } from "@mui/system";
+import {Container} from "@mui/system";
 import AppointmentService from "../services/appointment.service";
-import { useAuth } from "../services/context/AuthContext";
+import {useAuth} from "../services/context/AuthContext";
+import DoctorService from "../services/doctor.service";
+
+const hourIntervals = [
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+];
+
 
 function Programare() {
-  const { user } = useAuth();
+  const {user} = useAuth();
+  const [doctors, setDoctors] = useState([]);
+
+  const fetchDoctors = async () => {
+    try {
+      const fetchedDoctors = await DoctorService.getAllDoctors();
+      console.log("Doctors fetched: ", fetchedDoctors)
+      setDoctors(fetchedDoctors)
+    } catch (error) {
+      console.log("Could not fetch doctors from the database");
+      throw error;
+    }
+  }
+
+  useEffect(() => {
+    fetchDoctors();
+  }, []);
 
   const validationSchema = Yup.object({
     specialization: Yup.string().required("Specialization is required"),
@@ -284,17 +50,21 @@ function Programare() {
   });
 
   const handleAppointment = async (values, actions) => {
+    const appointmentDateTime = `${values.date} ${values.hour}:00`;
+
+    console.log("form values: ", values);
+
     const newAppointment = {
-      patientId:user.id,
-      doctorId:user.id,
-      appointmentType:'UNCONFIRMED',
+      patientId: user.id,
+      doctorId: values.doctor,
+      appointmentType: 'UNCONFIRMED',
       specialization: values.specialization,
+      date: appointmentDateTime,
       location: values.location,
-      date: values.date,
     };
 
     try {
-      await AppointmentService.addAppointment(newAppointment);
+      await AppointmentService.saveAppointment(newAppointment);
       alert("Programarea a fost trimisa");
     } catch (error) {
       console.error("Failed to add appointment", error);
@@ -304,14 +74,14 @@ function Programare() {
 
   return (
     <main className={styles.mainPage}>
-      <UserNav />
+      <UserNav/>
       <Container>
         <Box
           display="flex"
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          minHeight="60vh"
+          minHeight="40vh"
           textAlign="center"
           sx={{
             ml: 25,
@@ -325,7 +95,6 @@ function Programare() {
         >
           <Typography
             variant="h2"
-            component="h1"
             gutterBottom
             sx={{
               fontWeight: "bold",
@@ -340,6 +109,7 @@ function Programare() {
               doctor: "",
               location: "",
               date: "",
+              hour: "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleAppointment}
@@ -354,8 +124,9 @@ function Programare() {
                     as={Select}
                     labelId="specialization-label"
                     id="specialization"
-                    name="specialization"InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                    InputProps={{ style: { fontSize: "1.5rem" } }}
+                    name="specialization"
+                    InputLabelProps={{style: {fontSize: "1.5rem"}}}
+                    InputProps={{style: {fontSize: "1.5rem"}}}
                     value={props.values.specialization}
                     onChange={props.handleChange}
                     error={
@@ -363,41 +134,46 @@ function Programare() {
                       Boolean(props.errors.specialization)
                     }
                   >
-                    <MenuItem value={"Consiliere educationala"}>
+                    <MenuItem value={"Consiliere educationala"} sx={{fontSize: "1.5rem"}}>
                       Consiliere educationala
                     </MenuItem>
-                    <MenuItem value={"Consiliere profesionala"}>
+                    <MenuItem value={"Consiliere profesionala"} sx={{fontSize: "1.5rem"}}>
                       Consiliere profesionala
                     </MenuItem>
-                    <MenuItem value={"Consiliere psihologica"}>
+                    <MenuItem value={"Consiliere psihologica"} sx={{fontSize: "1.5rem"}}>
                       Consiliere psihologica
                     </MenuItem>
-                    <MenuItem value={"terapie online"}>Terapie online</MenuItem>
-                    <MenuItem value={"Life Coaching"}>Life Coaching</MenuItem>
+                    <MenuItem value={"terapie online"} sx={{fontSize: "1.5rem"}}>Terapie online</MenuItem>
+                    <MenuItem value={"Life Coaching"} sx={{fontSize: "1.5rem"}}>Life Coaching</MenuItem>
                   </Field>
                 </FormControl>
-                <Field
-                  as={StyledTextField}
-                  fullWidth
-                  id="doctor"
-                  name="doctor"
-                  label="Doctor"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
-                  value={props.values.doctor}
-                  onChange={props.handleChange}
-                  error={props.touched.doctor && Boolean(props.errors.doctor)}
-                  helperText={props.touched.doctor && props.errors.doctor}
-                  margin="normal"
-                />
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="doctor-label">Doctor</InputLabel>
+                  <Field
+                    as={Select}
+                    labelId="doctor-label"
+                    id="doctor"
+                    name="doctor"
+                    value={props.values.doctors}
+                    onChange={props.handleChange}
+                    error={props.touched.doctor && Boolean(props.errors.doctor)}
+                  >
+                    {doctors.map((doctor) => (
+                      <MenuItem key={doctor.id} value={doctor.id} sx={{fontSize: "1.5rem"}}>
+                        {doctor.firstName + " " + doctor.lastName}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </FormControl>
+
                 <Field
                   as={StyledTextField}
                   fullWidth
                   id="location"
                   name="location"
                   label="Locatie"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  InputLabelProps={{style: {fontSize: "1.5rem"}}}
+                  InputProps={{style: {fontSize: "1.5rem"}}}
                   value={props.values.location}
                   onChange={props.handleChange}
                   error={
@@ -411,18 +187,38 @@ function Programare() {
                   fullWidth
                   id="date"
                   name="date"
-                  label="Data si ora programare"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  label="Data"
+                  type="date"
+                  InputProps={{style: {fontSize: "1.5rem"}}}
                   value={props.values.date}
                   onChange={props.handleChange}
                   error={props.touched.date && Boolean(props.errors.date)}
                   helperText={props.touched.date && props.errors.date}
                   margin="normal"
-
+                  InputLabelProps={{
+                    shrink: true,
+                    style: {fontSize: "1.5rem"}
+                  }}
                 />
-
-                <StyledButton type='submit' fullWidth sx={{ mt: 8 }}>
+                <FormControl fullWidth margin="normal">
+                  <InputLabel id="hour-label">Ora preferata</InputLabel>
+                  <Field
+                    as={Select}
+                    labelId="hour-label"
+                    id="hour"
+                    name="hour"
+                    value={props.values.hour}
+                    onChange={props.handleChange}
+                    error={props.touched.hour && Boolean(props.errors.hour)}
+                  >
+                    {hourIntervals.map((hour) => (
+                      <MenuItem key={hour} value={hour} sx={{fontSize: "1.5rem"}}>
+                        {hour}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                </FormControl>
+                <StyledButton type="submit" fullWidth sx={{mt: 3}}>
                   Submit
                 </StyledButton>
                 {props.errors.general && (

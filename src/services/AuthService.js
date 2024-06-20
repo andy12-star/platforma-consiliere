@@ -29,10 +29,10 @@ class AuthService {
 
   async register(registerValues) {
     try {
-      const response = await axios.post(`${API_URL}/register`, registerValues);
+      const response = await axios.post(`${API_URL}/api/v1/users`, registerValues);
       return response.data;
     } catch (error) {
-      console.error("Registration failed", error);
+      console.error('Registration failed', error);
       throw error;
     }
   }
@@ -66,6 +66,11 @@ class AuthService {
       throw error;
     }
   }
+
+  updateUser(updatedUser) {
+    localStorage.setItem("user", updatedUser);
+  }
+
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
