@@ -44,6 +44,7 @@ const handleSave = async (values, actions) => {
 
   const updatedAppointment = {
     ...appointment,
+    appointmentType:values.appointmentType,
     specialization: values.specialization,
     location: values.location,
     date: appointmentDateTime,
@@ -93,6 +94,7 @@ return (
         </Typography>
         <Formik
           initialValues={{
+            appointmentType:appointment.appointmentType || "",
             specialization: appointment.specialization || "",
             doctor: appointment.doctor?.id || "",
             location: appointment.location || "",
@@ -206,21 +208,38 @@ return (
               )}
               {(user.roles[0].name ==="role_doctor")&&(
                 <>
-                  <Field
-                    as={StyledTextField}
-                    fullWidth
-                    id="appointmentType"
-                    name="appointmentType"
-                    label="Statusul programarii"
-                    InputProps={{ style: { fontSize: "1.5rem" } }}
-                    value={props.values.appointmentType}
-                    onChange={props.handleChange}
-                    margin="normal"
-                    InputLabelProps={{
-                      shrink: true,
-                      style: { fontSize: "1.5rem" },
-                    }}
-                  />
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel id="appointmentType">
+                      Specializare
+                    </InputLabel>
+                    <Field
+                      as={Select}
+                      labelId="appointmentType"
+                      id="appointmentType"
+                      name="appointmentType"
+                      InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                      InputProps={{ style: { fontSize: "1.5rem" } }}
+                      value={props.values.appointmentType}
+                      onChange={props.handleChange}
+                    >
+                      <MenuItem value={"UNCONFIRMED"} sx={{ fontSize: "1.5rem" }}>
+                        UNCONFIRMED
+                      </MenuItem>
+                      <MenuItem value={"CONFIRMED"} sx={{ fontSize: "1.5rem" }}>
+                        CONFIRMED
+                      </MenuItem>
+                      <MenuItem value={"UNHONORED"} sx={{ fontSize: "1.5rem" }}>
+                        UNHONORED
+                      </MenuItem>
+                      <MenuItem value={"HONORED"} sx={{ fontSize: "1.5rem" }}>
+                        HONORED
+                      </MenuItem>
+                      <MenuItem value={"CANCELED"} sx={{ fontSize: "1.5rem" }}>
+                 CANCELED
+                      </MenuItem>
+                    </Field>
+                  </FormControl>
+
                 </>)}
               <StyledButton type="submit" fullWidth sx={{ mt: 3 }}>
                 Salvează Modificările

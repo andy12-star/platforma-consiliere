@@ -1,115 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Typography, Box, Grid } from "@mui/material";
 import UserNav from "../components/UserNav";
 import ConsultCard from "../components/ConsultCard";
 import styles from "./mainPages.module.css";
+import { useAuth } from "../services/context/AuthContext";
+import ConsultationService from "../services/consultation.service";
 
-const appointments = [
-  {
-    doctor: "Dr. Bendu Domnica",
-    specialty: "Medicina Generala",
-    date: "08 Mai 2024",
+const extractYearFromDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.getFullYear();
+};
 
-    year: 2024,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
-    doctor: "Prof. Univ. Dr. Sidenco Luminita Elena",
-    specialty: "Recuperare Medicala",
-
-    year: 2023,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
-    doctor: "Dr. Bendu Domnica",
-    specialty: "Medicina Generala",
-    date: "15 Apr 2024",
-
-    year: 2023,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
-    doctor: "Prof. Univ. Dr. Sidenco Luminita Elena",
-    specialty: "Recuperare Medicala",
-    date: "09 Apr 2024",
-
-    year: 2024,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
-    doctor: "Dr. Bendu Domnica",
-    specialty: "Medicina Generala",
-    date: "15 Apr 2024",
-
-    year: 2023,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-  {
-    doctor: "Dr. Bendu Domnica",
-    specialty: "Medicina Generala",
-    date: "15 Apr 2024",
-    year: 2024,
-    details: {
-      trimisDe: "Bendu Domnica",
-      servicii: "Interpretare Analize",
-      simptome: "reflux g-e",
-      clinice: "G=92Kg, I=1,82m",
-      paraclinice: "hipercolest, S urina modif",
-      diagnostic: "Hipertensiune arteriala",
-    },
-  },
-
-];
-
-const groupAppointmentsByYear = (appointments) => {
-  return appointments.reduce((groups, appointment) => {
-    const year = appointment.year;
+const groupConsultationsByYear = (consultations) => {
+  return consultations.reduce((groups, consultation) => {
+    const year = extractYearFromDate(consultation.date);
     if (!groups[year]) {
       groups[year] = [];
     }
-    groups[year].push(appointment);
+    groups[year].push(consultation);
     return groups;
   }, {});
 };
 
 const RaportConsultatie = () => {
-  const groupedAppointments = groupAppointmentsByYear(appointments);
-  const sortedYears = Object.keys(groupedAppointments).sort((a, b) => b - a);
+
+  const [consultations, setConsultations] = useState([]);
+  const { user } = useAuth();
+
+
+  const fetchConsultations = async () => {
+    try {
+      let consultationData;
+      if (user.roles[0].name === 'role_user') {
+        consultationData = await ConsultationService.getConsultationForPatientId(user.id);
+      } else if (user.roles[0].name === 'role_doctor') {
+        consultationData = await ConsultationService.getConsultationForDoctorId(user.id);
+      }
+      setConsultations(consultationData);
+    } catch (error) {
+      console.error("Failed to fetch consultations", error);
+    }
+  };
+
+  useEffect(() => {
+    if (user && user.id) {
+      fetchConsultations();
+    }
+  }, [user]);
+
+  const groupedConsultations = groupConsultationsByYear(consultations);
+  const sortedYears = Object.keys(groupedConsultations).sort((a, b) => b - a);
 
   return (
     <main className={styles.mainPage}>
@@ -152,9 +92,9 @@ const RaportConsultatie = () => {
                 {year}
               </Typography>
               <Grid container spacing={2}>
-                {groupedAppointments[year].map((appointment, index) => (
+                {groupedConsultations[year].map((consultation, index) => (
                   <Grid item xs={10} sm={6} md={7} lg={3} key={index}>
-                    <ConsultCard {...appointment} />
+                    <ConsultCard {...consultation} />
                   </Grid>
                 ))}
               </Grid>

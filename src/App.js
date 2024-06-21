@@ -53,7 +53,7 @@ function App() {
             <Route path="profil" element={<ProtectedRoute><Profil/></ProtectedRoute>}/>
             <Route path="doctori" element={<ProtectedRoute><Doctori/></ProtectedRoute>}/>
             <Route path="pacienti" element={<ProtectedRoute><Pacienti/></ProtectedRoute>}/>
-            <Route path="rapoarte" element={<ProtectedRoute><Rapoarte/></ProtectedRoute>}/>
+            <Route path="rapoarte" element={<ProtectedRoute><RaportConsultatie/></ProtectedRoute>}/>
             <Route path="doctor-details/:id" element={<ProtectedRoute><DoctorDetails/></ProtectedRoute>}/>
             <Route path="patient-details/:id" element={<ProtectedRoute><PatientDetails/></ProtectedRoute>}/>
             <Route path="/modifica-programare" element={<ModifyAppt />} />
