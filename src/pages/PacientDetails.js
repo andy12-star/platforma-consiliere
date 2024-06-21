@@ -45,7 +45,7 @@ const PacientDetails = () => {
             variant="h2"
             marginBottom={2}
             sx={{
-              mt: 3,
+              mt: 6,
               fontWeight: "bold",
               fontFamily: "Times New Roman, Times, serif",
             }}

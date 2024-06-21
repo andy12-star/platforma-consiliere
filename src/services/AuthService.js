@@ -37,16 +37,6 @@ class AuthService {
     }
   }
 
-  async contact(contactValues) {
-    try {
-      const response = await axios.post(`${API_URL}/contact`, contactValues);
-      return response.data;
-    } catch (error) {
-      console.error("Contact form submission failed", error);
-      throw error;
-    }
-  }
-
   async refreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) {
@@ -54,7 +44,7 @@ class AuthService {
     }
 
     try {
-      const response = await axios.post(`${API_URL}/refresh-token`, {
+      const response = await axios.post(`${API_URL}/api/v1/auth/refresh`, {
         refreshToken,
       });
       if (response.data.accessToken) {
@@ -65,10 +55,6 @@ class AuthService {
       console.error("Refresh token failed", error);
       throw error;
     }
-  }
-
-  updateUser(updatedUser) {
-    localStorage.setItem("user", updatedUser);
   }
 
 }

@@ -102,7 +102,7 @@ export const StyledCalendar = styled(Calendar)({
     backgroundColor: "blue !important",
   },
   "& .CANCELED": {
-    backgroundColor: "pink !important",
+    backgroundColor: "orange !important",
   },
 
   "& .holiday": {

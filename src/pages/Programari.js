@@ -54,6 +54,7 @@ const Programari = () => {
   const fetchAppointmentsForDoctor = async (userId) => {
     try {
       const appointmentsData = await AppointmentService.getAppointmentsForDoctor(userId);
+
       setAppointments(appointmentsData);
     } catch (error) {
       console.error("Failed to fetch appointments", error);
@@ -63,6 +64,8 @@ const Programari = () => {
   const fetchAppointmentsForPatient = async (userId) => {
     try {
       const appointmentsData = await AppointmentService.getAppointmentsForPatient(userId);
+      console.log("appt");
+      console.log(appointmentsData)
       setAppointments(appointmentsData);
     } catch (error) {
       console.error("Failed to fetch appointments", error);
@@ -164,23 +167,10 @@ const Programari = () => {
 
   const handleModifyAppointment = (appointment) => {
     navigate("/modifica-programare", {
-      state: { appointment },
+      state: { appointment: { ...appointment, doctor: appointment.doctor || { id: "", firstName: "", lastName: "" } } },
     });
   };
 
-  const handleDeleteAppointment = async (appointmentId) => {
-    try {
-      await AppointmentService.deleteAppointment(appointmentId);
-      if (user.roles[0].name === "role_user") {
-        fetchAppointmentsForPatient(user.id);
-      } else if (user.roles[0].name === "role_doctor") {
-        fetchAppointmentsForDoctor(user.id);
-      }
-      setOpen(false);
-    } catch (error) {
-      console.error("Failed to delete appointment", error);
-    }
-  };
 
   const handleCancelAppointment = async (appointmentId) => {
     try {
@@ -354,7 +344,7 @@ const Programari = () => {
                       >
                         Pacient:
                       </Typography>
-                      <Typography variant="h4">{appointment.patient}</Typography>
+                      <Typography variant="h4">{appointment.patient.firstName+" "+appointment.patient.lastName}</Typography>
                     </>
                   )}
                   <Divider />
@@ -364,7 +354,7 @@ const Programari = () => {
                     sx={{
                       fontSize: "1.5rem",
                       mt: 4,
-                      ml:29,
+                      ml:26,
                     }}
                   >
                     Modifica Programare

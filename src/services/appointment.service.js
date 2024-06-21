@@ -40,6 +40,16 @@ class AppointmentService {
       throw error;
     }
   }
+
+  async updateAppointment( appointment){
+    try{
+      const response = await axiosInstance.put('/appointment/'+appointment.id,appointment);
+      return response.data;
+    }catch(error){
+      console.error("Updating appointment failed",error);
+      throw error;
+    }
+  }
 }
 
 const appointmentServiceInstance = new AppointmentService();

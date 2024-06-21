@@ -31,7 +31,7 @@ const Notite = () => {
 
   useEffect(() => {
     fetchNotes();
-  });
+  }, []);
 
   const fetchNotes = async () => {
     try {
@@ -61,8 +61,7 @@ const Notite = () => {
 
     try {
       await NotesService.addNote(newNote);
-      const updatedNotes = await NotesService.getNotesForUser(user.id);
-      setNotes(updatedNotes);
+      fetchNotes();
       setNewNoteTitle("");
       setNewNoteText("");
       setOpen(false);
@@ -152,11 +151,9 @@ const Notite = () => {
                     </Typography>
                     <Typography variant="h6" display="block" gutterBottom>
                       Created at{" "}
-                      {
-                        new Date(note.createdAt)
-                          .toLocaleDateString("en-US", dateOptions)
-                          .split("T")[0]
-                      }
+                      {new Date(note.createdAt)
+                        .toLocaleDateString("en-US", dateOptions)
+                        .split("T")[0]}
                     </Typography>
                   </AccordionDetails>
                 </Accordion>

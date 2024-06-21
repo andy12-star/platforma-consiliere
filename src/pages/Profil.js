@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { Container, Typography, Divider, Box, TextField } from "@mui/material";
+import React, {useState} from "react";
+import {Box, Container, Divider, TextField, Typography} from "@mui/material";
 import UserNav from "../components/UserNav";
 import styles from "./mainPages.module.css";
-import { useAuth } from "../services/context/AuthContext";
-import { StyledButton } from "../components/styledComp";
+import {useAuth} from "../services/context/AuthContext";
+import {StyledButton} from "../components/styledComp";
 import UserService from "../services/user.service";
 
-// Define the relevant fields for the form, including "id"
 const userFormFields = [
   "id",
   "firstName",
@@ -18,7 +17,7 @@ const userFormFields = [
 ];
 
 const Profil = () => {
-  const { user, setUser: updateUser } = useAuth();
+  const {user, setUser: updateUser} = useAuth();
 
   const initialUserData = userFormFields.reduce((acc, field) => {
     if (user[field] !== undefined) acc[field] = user[field];
@@ -26,11 +25,11 @@ const Profil = () => {
   }, {});
 
   const [editMode, setEditMode] = useState(false);
-  const [userData, setUserData] = useState({ ...initialUserData });
+  const [userData, setUserData] = useState({...initialUserData});
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value, type: 'USER' });
+    const {name, value} = e.target;
+    setUserData({...userData, [name]: value, type: 'USER'});
   };
 
   const handleSave = async () => {
@@ -47,7 +46,7 @@ const Profil = () => {
 
   return (
     <main className={styles.mainPage}>
-      <UserNav />
+      <UserNav/>
       <section2>
         <Container>
           <Typography
@@ -83,75 +82,75 @@ const Profil = () => {
                   fullWidth
                   label="Nume"
                   name="firstName"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  InputLabelProps={{style: {fontSize: "1.5rem"}}}
+                  InputProps={{style: {fontSize: "1.5rem"}}}
                   value={userData.firstName}
                   onChange={handleInputChange}
-                  sx={{ marginBottom: 2 }}
+                  sx={{marginBottom: 2}}
                 />
                 <TextField
                   fullWidth
                   label="Prenume"
                   name="lastName"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  InputLabelProps={{style: {fontSize: "1.5rem"}}}
+                  InputProps={{style: {fontSize: "1.5rem"}}}
                   value={userData.lastName}
                   onChange={handleInputChange}
-                  sx={{ marginBottom: 2 }}
+                  sx={{marginBottom: 2}}
                 />
                 <TextField
                   fullWidth
                   label="Data nașterii"
                   name="dateOfBirth"
                   type="date"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" }, shrink: true }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  InputLabelProps={{style: {fontSize: "1.5rem"}, shrink: true}}
+                  InputProps={{style: {fontSize: "1.5rem"}}}
                   value={userData.dateOfBirth}
                   onChange={handleInputChange}
-                  sx={{ marginBottom: 2 }}
+                  sx={{marginBottom: 2}}
                 />
                 <TextField
                   fullWidth
                   label="Adresa de mail"
                   name="username"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  InputLabelProps={{style: {fontSize: "1.5rem"}}}
+                  InputProps={{style: {fontSize: "1.5rem"}}}
                   value={userData.username}
                   onChange={handleInputChange}
-                  sx={{ marginBottom: 2 }}
+                  sx={{marginBottom: 2}}
                 />
                 <TextField
                   fullWidth
                   label="Numar de telefon"
                   name="phoneNumber"
-                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  InputLabelProps={{style: {fontSize: "1.5rem"}}}
+                  InputProps={{style: {fontSize: "1.5rem"}}}
                   value={userData.phoneNumber}
                   onChange={handleInputChange}
-                  sx={{ marginBottom: 2 }}
+                  sx={{marginBottom: 2}}
                 />
                 {user.roles[0].name === "role_user" && (
                   <TextField
                     fullWidth
                     label="Facultate"
                     name="faculty"
-                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                    InputProps={{ style: { fontSize: "1.5rem" } }}
+                    InputLabelProps={{style: {fontSize: "1.5rem"}}}
+                    InputProps={{style: {fontSize: "1.5rem"}}}
                     value={userData.faculty}
                     onChange={handleInputChange}
-                    sx={{ marginBottom: 2 }}
+                    sx={{marginBottom: 2}}
                   />
                 )}
                 <StyledButton
                   variant="contained"
-                  sx={{ mt: 3 }}
+                  sx={{mt: 3}}
                   onClick={handleSave}
                 >
                   Salvează
                 </StyledButton>
                 <StyledButton
                   variant="contained"
-                  sx={{ mt: 3, ml: 2 }}
+                  sx={{mt: 3, ml: 2}}
                   onClick={() => setEditMode(false)}
                 >
                   Anulează
@@ -173,7 +172,7 @@ const Profil = () => {
                 >
                   Nume: {user.firstName}
                 </Typography>
-                <Divider />
+                <Divider/>
                 <Typography
                   variant="h4"
                   textAlign="left"
@@ -188,7 +187,7 @@ const Profil = () => {
                 >
                   Prenume: {user.lastName}
                 </Typography>
-                <Divider />
+                <Divider/>
                 <Typography
                   variant="h4"
                   textAlign="left"
@@ -203,7 +202,7 @@ const Profil = () => {
                 >
                   Data nașterii: {user.dateOfBirth}
                 </Typography>
-                <Divider />
+                <Divider/>
                 <Typography
                   variant="h4"
                   textAlign="left"
@@ -218,7 +217,7 @@ const Profil = () => {
                 >
                   Adresa de mail: {user.username}
                 </Typography>
-                <Divider />
+                <Divider/>
                 <Typography
                   variant="h4"
                   textAlign="left"
@@ -233,7 +232,7 @@ const Profil = () => {
                 >
                   Numar de telefon: {user.phoneNumber}
                 </Typography>
-                <Divider />
+                <Divider/>
                 {user.roles[0].name === "role_user" && (
                   <>
                     <Typography
@@ -250,12 +249,12 @@ const Profil = () => {
                     >
                       Facultate: {user.faculty}
                     </Typography>
-                    <Divider />
+                    <Divider/>
                   </>
                 )}
                 <StyledButton
                   variant="contained"
-                  sx={{ mt: 6 }}
+                  sx={{mt: 6}}
                   onClick={() => setEditMode(true)}
                 >
                   Editeaza profilul

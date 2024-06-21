@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import {
@@ -15,12 +15,29 @@ import styles from "./mainPages.module.css";
 import { StyledTextField, StyledButton } from "../components/styledComp";
 import AppointmentService from "../services/appointment.service";
 import {useAuth} from "../services/context/AuthContext";
+import DoctorService from "../services/doctor.service";
 
 const ModifyAppt = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { appointment } = location.state;
   const{user}=useAuth();
+  const [doctors, setDoctors] = useState([]);
+
+  const fetchDoctors = async () => {
+    try {
+      const fetchedDoctors = await DoctorService.getAllDoctors();
+      console.log("Doctors fetched: ", fetchedDoctors)
+      setDoctors(fetchedDoctors)
+    } catch (error) {
+      console.log("Could not fetch doctors from the database");
+      throw error;
+    }
+  }
+
+  useEffect(() => {
+    fetchDoctors();
+  }, []);
 
 const handleSave = async (values, actions) => {
   const appointmentDateTime = `${values.date} ${values.hour}:00`;
@@ -30,15 +47,15 @@ const handleSave = async (values, actions) => {
     specialization: values.specialization,
     location: values.location,
     date: appointmentDateTime,
-    doctor: values.doctor,
+    doctorId: values.doctor,
   };
-
+  console.log("Updated appt: ", updatedAppointment);
   try {
-    await AppointmentService.saveAppointment(updatedAppointment);
+    await AppointmentService.updateAppointment(updatedAppointment);
     navigate("/programari");
   } catch (error) {
-    console.error("Failed to save appointment", error);
-    actions.setFieldError("general", "Failed to save appointment");
+    console.error("Failed to update appointment", error);
+    actions.setFieldError("general", "Failed to update appointment");
   }
 };
 
@@ -77,7 +94,7 @@ return (
         <Formik
           initialValues={{
             specialization: appointment.specialization || "",
-            doctor: appointment.doctor || "",
+            doctor: appointment.doctor?.id || "",
             location: appointment.location || "",
             date: appointment.date.split("T")[0],
             hour: appointment.date.split("T")[1].substring(0, 5),
@@ -122,18 +139,25 @@ return (
                   </MenuItem>
                 </Field>
               </FormControl>
-              <Field
-                as={StyledTextField}
-                fullWidth
-                id="doctor"
-                name="doctor"
-                label="Doctor"
-                InputLabelProps={{ style: { fontSize: "1.5rem" } }}
-                InputProps={{ style: { fontSize: "1.5rem" } }}
-                value={props.values.doctor}
-                onChange={props.handleChange}
-                margin="normal"
-              />
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel id="doctor-label">Doctor</InputLabel>
+                    <Field
+                      as={Select}
+                      labelId="doctor-label"
+                      id="doctor"
+                      name="doctor"
+                      InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                      InputProps={{ style: { fontSize: "1.5rem" } }}
+                      value={props.values.doctor}
+                      onChange={props.handleChange}
+                    >
+                      {doctors.map((doctor) => (
+                        <MenuItem key={doctor.id} value={doctor.id} sx={{ fontSize: "1.5rem" }}>
+                          {doctor.firstName + " " + doctor.lastName}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </FormControl>
               <Field
                 as={StyledTextField}
                 fullWidth
