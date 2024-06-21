@@ -9,41 +9,48 @@ import {
   DialogContent,
   Divider,
   DialogActions,
+  TextField,
 } from "@mui/material";
 import { StyledButton } from "./styledComp";
-import {useAuth} from "../services/context/AuthContext";
+import { useAuth } from "../services/context/AuthContext";
 import ConsultationService from "../services/consultation.service";
 
 const ConsultCard = (consultation) => {
   const [open, setOpen] = useState(false);
-  const {user} = useAuth();
-
+  const { user } = useAuth();
   const [editMode, setEditMode] = useState(false);
+  const [consultationData, setConsultationData] = useState({
+    duration: consultation.duration,
+    observations: consultation.observations,
+    recommendations: consultation.recommendations,
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
-    console.log("connsultation");
-    console.log(consultation);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setEditMode(false); // Reset edit mode on close
   };
 
-  const handleSave=async(values,actions)=>{
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setConsultationData({ ...consultationData, [name]: value });
+  };
 
-    const updatedConsultation={
+  const handleSave = async () => {
+    const updatedConsultation = {
       ...consultation,
-      duration:values.duration,
-      observation: values.observation,
-      recommendation: values.recommendation,
+      ...consultationData,
     };
-    try{
-     await ConsultationService.updateConsultationReport(updatedConsultation);
-     alert("consultation updated");
-    }catch (error) {
-      console.error("Failed to update consultation");
-      actions.setFieldError("general", "Failed to update appointment");
+    try {
+      await ConsultationService.updateConsultationReport(updatedConsultation);
+      alert("Consultation updated");
+      setEditMode(false);
+      handleClose();
+    } catch (error) {
+      console.error("Failed to update consultation", error);
     }
   };
 
@@ -77,7 +84,7 @@ const ConsultCard = (consultation) => {
             boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {(user.roles[0].name==='role_user')&& (
+          {user.roles[0].name === 'role_user' && (
             <Typography
               variant="h5"
               alignItems="center"
@@ -88,7 +95,7 @@ const ConsultCard = (consultation) => {
               {consultation.doctorName}
             </Typography>
           )}
-          {(user.roles[0].name==='role_doctor')&& (
+          {user.roles[0].name === 'role_doctor' && (
             <Typography
               variant="h5"
               alignItems="center"
@@ -105,7 +112,6 @@ const ConsultCard = (consultation) => {
             DATA SI ORA CONSULTATIEI
           </Typography>
           <Typography variant="h6">{consultation.date.split("T")[0]}</Typography>
-
           <Typography variant="h6">{getFormattedTime(consultation.date)}</Typography>
         </Box>
         <StyledButton
@@ -133,9 +139,42 @@ const ConsultCard = (consultation) => {
           </DialogTitle>
           <DialogContent>
             <Box sx={{ p: 1 }}>
-              {(user.roles[0].name==='role_user') &&(
-<>
-                <Typography
+              {user.roles[0].name === 'role_user' && (
+                <>
+                  <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                    }}
+                  >
+                    TRIMIS DE:
+                  </Typography>
+                  <Typography variant="h4">{consultation.doctorName}</Typography>
+                  <Divider />
+                </>
+              )}
+              {user.roles[0].name === 'role_doctor' && (
+                <>
+                  <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      fontWeight: "bold",
+                      fontFamily: "Times New Roman, Times, serif",
+                    }}
+                  >
+                    PACIENT:
+                  </Typography>
+                  <Typography variant="h4">
+                    {consultation.patientName}
+                  </Typography>
+                  <Divider />
+                </>
+              )}
+              <Box sx={{ my: 2 }} />
+              <Typography
                 variant="h4"
                 gutterBottom
                 sx={{
@@ -143,171 +182,129 @@ const ConsultCard = (consultation) => {
                   fontFamily: "Times New Roman, Times, serif",
                 }}
               >
-                  TRIMIS DE:
+                SERVICII
               </Typography>
-                <Typography variant="h4">{consultation.doctorName}
-            </Typography>
-            <Divider />
-                </>
-                )}
-              {(user.roles[0].name==='role_doctor') &&(
-<>
-
-                <Typography
-                  variant="h4"
-                  gutterBottom
-                  sx={{
-                    fontWeight: "bold",
-                    fontFamily: "Times New Roman, Times, serif",
-                  }}
-                >
-
-                  PACIENT:
-                </Typography>
-                <Typography variant="h4">
-                  {consultation.patientName}
-              </Typography>
-            <Divider />
-            </>
-              )}
+              <Typography variant="h4">{consultation.specialization}</Typography>
+              <Divider />
               <Box sx={{ my: 2 }} />
-
-
-              {(user.roles[0].name==='role_doctor') && (
-                <>
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    SERVICII
-                  </Typography>
-                  <Typography variant="h4">{consultation.specialization}</Typography>
-                  <Divider/>
-                  <Box sx={{my: 2}}/>
-
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    DURATA SEDINTEI
-                  </Typography>
-
-                  <Typography variant="h4">{consultation.duration}</Typography>
-                  <Divider/>
-                  <Box sx={{my: 2}}/>
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    OBSERVATII :
-                  </Typography>
-                  <Typography variant="h4">{consultation.observation}</Typography>
-                  <Divider/>
-                  <Box sx={{my: 2}}/>
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    RECOMANDARI
-                  </Typography>
-                  <Typography variant="h4">{consultation.recommendation}</Typography>
-                </>
-                )
-            }
-              {(user.roles[0].name==='role_user') && (
-                <>
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    SERVICII
-                  </Typography>
-                  <Typography variant="h4">{consultation.specialization}</Typography>
-                  <Divider/>
-                  <Box sx={{my: 2}}/>
-
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    DURATA SEDINTEI
-                  </Typography>
-
-                  <Typography variant="h4">{consultation.duration}</Typography>
-                  <Divider/>
-                  <Box sx={{my: 2}}/>
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    OBSERVATII :
-                  </Typography>
-                  <Typography variant="h4">{consultation.observation}</Typography>
-                  <Divider/>
-                  <Box sx={{my: 2}}/>
-                  <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "bold",
-                      fontFamily: "Times New Roman, Times, serif",
-                    }}
-                  >
-                    RECOMANDARI
-                  </Typography>
-                  <Typography variant="h4">{consultation.recommendation}</Typography>
-                </>
-              )
-              }
-
-
-
-
-
-              <Divider/>
-          </Box>
-        </DialogContent>
-          <DialogActions>
-            {(user.roles[0].name==='role_doctor')&&(
-              <StyledButton
-                onClick={handleSave}
-                variant="contained"
+              <Typography
+                variant="h4"
+                gutterBottom
                 sx={{
-                  mr: 4,
-                  mt: 3,
-                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  fontFamily: "Times New Roman, Times, serif",
                 }}
               >
-                Modifica programare
-              </StyledButton>
+                DURATA SEDINTEI
+              </Typography>
+              {editMode ? (
+                <TextField
+                  fullWidth
+                  name="duration"
+                  value={consultationData.duration}
+                  onChange={handleInputChange}
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  margin="normal"
+                />
+              ) : (
+                <Typography variant="h4">{consultation.duration}</Typography>
+              )}
+              <Divider />
+              <Box sx={{ my: 2 }} />
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                  fontWeight: "bold",
+                  fontFamily: "Times New Roman, Times, serif",
+                }}
+              >
+                OBSERVATII :
+              </Typography>
+              {editMode ? (
+                <TextField
+                  fullWidth
+                  name="observation"
+                  value={consultationData.observations}
+                  onChange={handleInputChange}
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  margin="normal"
+                />
+              ) : (
+                <Typography variant="h4">{consultation.observations}</Typography>
+              )}
+              <Divider />
+              <Box sx={{ my: 2 }} />
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{
+                  fontWeight: "bold",
+                  fontFamily: "Times New Roman, Times, serif",
+                }}
+              >
+                RECOMANDARI
+              </Typography>
+              {editMode ? (
+                <TextField
+                  fullWidth
+                  name="recommendation"
+                  value={consultationData.recommendations}
+                  onChange={handleInputChange}
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
+                  margin="normal"
+                />
+              ) : (
+                <Typography variant="h4">{consultation.recommendations}</Typography>
+              )}
+              <Divider />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            {user.roles[0].name === 'role_doctor' && (
+              <>
+                {editMode ? (
+                  <>
+                    <StyledButton
+                      onClick={handleSave}
+                      variant="contained"
+                      sx={{
+                        mr: 4,
+                        mt: 3,
+                        fontSize: "1.5rem",
+                      }}
+                    >
+                      Salvează
+                    </StyledButton>
+                    <StyledButton
+                      onClick={() => setEditMode(false)}
+                      variant="contained"
+                      sx={{
+                        mr: 4,
+                        mt: 3,
+                        fontSize: "1.5rem",
+                      }}
+                    >
+                      Anulează
+                    </StyledButton>
+                  </>
+                ) : (
+                  <StyledButton
+                    onClick={() => setEditMode(true)}
+                    variant="contained"
+                    sx={{
+                      mr: 4,
+                      mt: 3,
+                      fontSize: "1.5rem",
+                    }}
+                  >
+                    Modifica
+                  </StyledButton>
+                )}
+              </>
             )}
             <StyledButton
               onClick={handleClose}
@@ -318,14 +315,14 @@ const ConsultCard = (consultation) => {
                 fontSize: "1.5rem",
               }}
             >
-              inchide
+              Inchide
             </StyledButton>
 
-          </DialogActions>
-        </Dialog>
-      </CardContent>
-    </Card>
-  );
+        </DialogActions>
+      </Dialog>
+    </CardContent>
+</Card>
+);
 };
 
 export default ConsultCard;

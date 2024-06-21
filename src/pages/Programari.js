@@ -162,7 +162,10 @@ const Programari = () => {
   };
 
   const handleNewAppointment = () => {
-    navigate("/programare");
+    const selectedDateString = selectedDate.toISOString().split('T')[0];
+    navigate("/programare", {
+      state: { selectedDate: selectedDateString },
+    });
   };
 
   const handleModifyAppointment = (appointment) => {

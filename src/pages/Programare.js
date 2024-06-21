@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Field, Form, Formik} from "formik";
+import React, { useEffect, useState } from "react";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import {Box, FormControl, InputLabel, MenuItem, Select, Typography,} from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import UserNav from "../components/UserNav";
-import {StyledButton, StyledTextField} from "../components/styledComp";
+import { StyledButton, StyledTextField } from "../components/styledComp";
 import styles from "./mainPages.module.css";
-import {Container} from "@mui/system";
+import { Container } from "@mui/system";
 import AppointmentService from "../services/appointment.service";
-import {useAuth} from "../services/context/AuthContext";
+import { useAuth } from "../services/context/AuthContext";
 import DoctorService from "../services/doctor.service";
+import { useLocation } from "react-router-dom";
 
 const hourIntervals = [
   "09:00",
@@ -21,10 +22,11 @@ const hourIntervals = [
   "16:00",
 ];
 
-
 function Programare() {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [doctors, setDoctors] = useState([]);
+  const location = useLocation();
+  const selectedDate = location.state?.selectedDate || "";
 
   const fetchDoctors = async () => {
     try {
@@ -74,7 +76,7 @@ function Programare() {
 
   return (
     <main className={styles.mainPage}>
-      <UserNav/>
+      <UserNav />
       <Container>
         <Box
           display="flex"
@@ -108,7 +110,7 @@ function Programare() {
               specialization: "",
               doctor: "",
               location: "",
-              date: "",
+              date: selectedDate ? new Date(selectedDate).toISOString().split('T')[0] : "",
               hour: "",
             }}
             validationSchema={validationSchema}
@@ -125,8 +127,8 @@ function Programare() {
                     labelId="specialization-label"
                     id="specialization"
                     name="specialization"
-                    InputLabelProps={{style: {fontSize: "1.5rem"}}}
-                    InputProps={{style: {fontSize: "1.5rem"}}}
+                    InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                    InputProps={{ style: { fontSize: "1.5rem" } }}
                     value={props.values.specialization}
                     onChange={props.handleChange}
                     error={
@@ -134,17 +136,21 @@ function Programare() {
                       Boolean(props.errors.specialization)
                     }
                   >
-                    <MenuItem value={"Consiliere educationala"} sx={{fontSize: "1.5rem"}}>
+                    <MenuItem value={"Consiliere educationala"} sx={{ fontSize: "1.5rem" }}>
                       Consiliere educationala
                     </MenuItem>
-                    <MenuItem value={"Consiliere profesionala"} sx={{fontSize: "1.5rem"}}>
+                    <MenuItem value={"Consiliere profesionala"} sx={{ fontSize: "1.5rem" }}>
                       Consiliere profesionala
                     </MenuItem>
-                    <MenuItem value={"Consiliere psihologica"} sx={{fontSize: "1.5rem"}}>
+                    <MenuItem value={"Consiliere psihologica"} sx={{ fontSize: "1.5rem" }}>
                       Consiliere psihologica
                     </MenuItem>
-                    <MenuItem value={"terapie online"} sx={{fontSize: "1.5rem"}}>Terapie online</MenuItem>
-                    <MenuItem value={"Life Coaching"} sx={{fontSize: "1.5rem"}}>Life Coaching</MenuItem>
+                    <MenuItem value={"terapie online"} sx={{ fontSize: "1.5rem" }}>
+                      Terapie online
+                    </MenuItem>
+                    <MenuItem value={"Life Coaching"} sx={{ fontSize: "1.5rem" }}>
+                      Life Coaching
+                    </MenuItem>
                   </Field>
                 </FormControl>
                 <FormControl fullWidth margin="normal">
@@ -154,12 +160,12 @@ function Programare() {
                     labelId="doctor-label"
                     id="doctor"
                     name="doctor"
-                    value={props.values.doctors}
+                    value={props.values.doctor}
                     onChange={props.handleChange}
                     error={props.touched.doctor && Boolean(props.errors.doctor)}
                   >
                     {doctors.map((doctor) => (
-                      <MenuItem key={doctor.id} value={doctor.id} sx={{fontSize: "1.5rem"}}>
+                      <MenuItem key={doctor.id} value={doctor.id} sx={{ fontSize: "1.5rem" }}>
                         {doctor.firstName + " " + doctor.lastName}
                       </MenuItem>
                     ))}
@@ -172,8 +178,8 @@ function Programare() {
                   id="location"
                   name="location"
                   label="Locatie"
-                  InputLabelProps={{style: {fontSize: "1.5rem"}}}
-                  InputProps={{style: {fontSize: "1.5rem"}}}
+                  InputLabelProps={{ style: { fontSize: "1.5rem" } }}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
                   value={props.values.location}
                   onChange={props.handleChange}
                   error={
@@ -189,7 +195,7 @@ function Programare() {
                   name="date"
                   label="Data"
                   type="date"
-                  InputProps={{style: {fontSize: "1.5rem"}}}
+                  InputProps={{ style: { fontSize: "1.5rem" } }}
                   value={props.values.date}
                   onChange={props.handleChange}
                   error={props.touched.date && Boolean(props.errors.date)}
@@ -197,7 +203,7 @@ function Programare() {
                   margin="normal"
                   InputLabelProps={{
                     shrink: true,
-                    style: {fontSize: "1.5rem"}
+                    style: { fontSize: "1.5rem" }
                   }}
                 />
                 <FormControl fullWidth margin="normal">
@@ -212,13 +218,13 @@ function Programare() {
                     error={props.touched.hour && Boolean(props.errors.hour)}
                   >
                     {hourIntervals.map((hour) => (
-                      <MenuItem key={hour} value={hour} sx={{fontSize: "1.5rem"}}>
+                      <MenuItem key={hour} value={hour} sx={{ fontSize: "1.5rem" }}>
                         {hour}
                       </MenuItem>
                     ))}
                   </Field>
                 </FormControl>
-                <StyledButton type="submit" fullWidth sx={{mt: 3}}>
+                <StyledButton type="submit" fullWidth sx={{ mt: 3 }}>
                   Submit
                 </StyledButton>
                 {props.errors.general && (
@@ -243,3 +249,4 @@ function Programare() {
 }
 
 export default Programare;
+

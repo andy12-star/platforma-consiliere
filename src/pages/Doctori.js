@@ -15,53 +15,52 @@ import { useNavigate } from "react-router-dom";
 import UserNav from "../components/UserNav";
 import styles from "./mainPages.module.css";
 import { useAuth } from "../services/context/AuthContext";
-import PatientService from "../services/patient.service";
+import DoctorService from "../services/doctor.service";
 
 
-const Pacienti = () => {
+const Doctori = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [patients, setPatients] = useState([]);
-  const [patientsAll, setPatientsAll] = useState([]);
-
+  const [doctors, setDoctors] = useState([]);
+  const [doctorsAll,setDoctorsAll] = useState([]);
 
   useEffect(() => {
-    const fetchPatientsAll = async () => {
+    const fetchDoctors = async () => {
       try {
-        const data = await PatientService.getAllPatients();
-        setPatientsAll(data);
+        const data = await DoctorService.getDoctorsForPatient(user.id);
+        setDoctors(data);
       } catch (error) {
-        console.error("Failed to fetch patients", error);
+        console.error("Failed to fetch doctors", error);
       }
     };
 
     if (user?.id) {
-      fetchPatientsAll();
+      fetchDoctors();
     }
   }, [user]);
 
 
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchALlDoctors = async () => {
       try {
-        const data = await PatientService.getPatientsForDoctor(user.id);
-        setPatients(data);
+        const dataALL = await DoctorService.getAllDoctors();
+        setDoctorsAll(dataALL);
       } catch (error) {
-        console.error("Failed to fetch patients", error);
+        console.error("Failed to fetch doctors", error);
       }
     };
 
     if (user?.id) {
-      fetchPatients();
+      fetchALlDoctors();
     }
   }, [user]);
 
 
-  const handlePatientClick = (patient) => {
+  const handleDoctorClick = (doctor) => {
 
-    console.log("pacient:");
-    console.log(patient);
-    navigate(`/patient-details/${patient.id}`, { state: { patient } });
+    console.log("doctor:");
+    console.log(doctor);
+    navigate(`/doctor-details/${doctor.id}`, { state: { doctor } });
   };
 
   return (
@@ -85,11 +84,12 @@ const Pacienti = () => {
               variant="h2"
               marginBottom={2}
               sx={{
+                mt:3,
                 fontWeight: "bold",
                 fontFamily: "Times New Roman, Times, serif",
               }}
             >
-              Lista Pacienților
+              Lista Doctorilor
             </Typography>
             <TableContainer component={Paper} sx={{ mt: 3 }}>
               <Table
@@ -153,87 +153,71 @@ const Pacienti = () => {
                         Data de nastere
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      <Typography
-                        variant="h4"
-                        sx={{
-                          fontWeight: "bold",
-                          fontFamily: "Times New Roman, Times, serif",
-                        }}
-                      >
-                        Facultate
-                      </Typography>
-                    </TableCell>
+
 
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(user.roles[0].name==='role_doctor')&&(
+                  {(user.roles[0].name==='role_user')&&(
                     <>
-
-                      {patients.map((patient) => (
+                      {doctors.map((doctor) => (
                         <TableRow
-                          key={patient.userId}
-                          onClick={() => handlePatientClick(patient)}
+                          key={doctor.userId}
+                          onClick={() => handleDoctorClick(doctor)}
                           style={{ cursor: "pointer" }}
                         >
                           <TableCell>
                             <Typography variant="h5">
-                              {patient.firstName}
+                              {doctor.firstName}
                             </Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="h5">{patient.lastName}</Typography>
+                            <Typography variant="h5">{doctor.lastName}</Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="h5">{patient.username}</Typography>
+                            <Typography variant="h5">{doctor.username}</Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="h5">{patient.phoneNumber}</Typography>
+                            <Typography variant="h5">{doctor.phoneNumber}</Typography>
                           </TableCell>
                           <TableCell>
                             <Typography variant="h5">
-                              {patient.dateOfBirth}
+                              {doctor.dateOfBirth}
                             </Typography>
                           </TableCell>
-                          <TableCell>
-                            <Typography variant="h5">{patient.faculty}</Typography>
-                          </TableCell>
+
                         </TableRow>
                       ))}
                     </>
                   )}
                   {(user.roles[0].name==='role_admin')&&(
                     <>
-
-                      {patientsAll.map((patient) => (
+                      {doctorsAll.map((doctor) => (
                         <TableRow
-                          key={patient.userId}
-                          onClick={() => handlePatientClick(patient)}
+                          key={doctor.userId}
+                          onClick={() => handleDoctorClick(doctor)}
                           style={{ cursor: "pointer" }}
                         >
                           <TableCell>
                             <Typography variant="h5">
-                              {patient.firstName}
+                              {doctor.firstName}
                             </Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="h5">{patient.lastName}</Typography>
+                            <Typography variant="h5">{doctor.lastName}</Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="h5">{patient.username}</Typography>
+                            <Typography variant="h5">{doctor.username}</Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="h5">{patient.phoneNumber}</Typography>
+                            <Typography variant="h5">{doctor.phoneNumber}</Typography>
                           </TableCell>
                           <TableCell>
                             <Typography variant="h5">
-                              {patient.dateOfBirth}
+                              {doctor.dateOfBirth}
                             </Typography>
                           </TableCell>
-                          <TableCell>
-                            <Typography variant="h5">{patient.faculty}</Typography>
-                          </TableCell>
+
                         </TableRow>
                       ))}
                     </>
@@ -248,4 +232,4 @@ const Pacienti = () => {
   );
 };
 
-export default Pacienti;
+export default Doctori;

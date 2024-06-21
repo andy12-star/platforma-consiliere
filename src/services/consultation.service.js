@@ -37,12 +37,10 @@ class ConsultationService {
     }
   }
 
-  async updateConsultationReport(appointmentId, consultationData) {
+  async updateConsultationReport( consultation) {
     try {
-      const response = await axiosInstance.put(
-        '/consultation/'+appointmentId,
-        consultationData
-      );
+      console.log("consult",consultation);
+      const response = await axiosInstance.put('/consultation/'+consultation.id, consultation);
       return response.data;
     } catch (error) {
       console.error("Failed to update consultation report", error);
@@ -61,6 +59,17 @@ class ConsultationService {
       throw error;
     }
   }
+
+  async getConsultationsForDoctorByPatient(doctorId, patientId) {
+    try {
+      const response = await axiosInstance.get('/consultation/doctor-patient/'+doctorId+'/'+patientId);
+      return response.data;
+    } catch (error) {
+      console.error("Fetching consultations for doctor by patient failed", error);
+      throw error;
+    }
+  }
+
 }
 
 const consulationServiceInstance = new ConsultationService();
