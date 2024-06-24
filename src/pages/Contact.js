@@ -20,7 +20,8 @@ function Contact() {
 
   const handleContactSubmit = async (values, actions) => {
     try {
-      await ContactService.submitContactForm(values);
+      console.log("values: ", values);
+      await ContactService.contact(values);
       actions.setSubmitting(false);
       alert("Mesajul a fost trimis");
       actions.resetForm();

@@ -23,7 +23,7 @@ const PacientDetails = () => {
       console.log("consulatii");
       console.log(data);
     } catch (error) {
-      console.error("Failed to fetch consultations", error);
+      console.error("Failed to fetch all consultations", error);
     }
   };
 

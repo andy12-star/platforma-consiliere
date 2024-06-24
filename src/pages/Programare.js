@@ -22,9 +22,34 @@ const hourIntervals = [
   "16:00",
 ];
 
+const holidays = [
+  { month: 0, day: 1 },
+  { month: 0, day: 2 },
+  { month: 3, day: 20 },
+  { month: 3, day: 21 },
+  { month: 3, day: 22 },
+  { month: 4, day: 1 },
+  { month: 5, day: 1 },
+  { month: 5, day: 24 },
+  { month: 7, day: 15 },
+  { month: 10, day: 30 },
+  { month: 11, day: 1 },
+  { month: 11, day: 25 },
+  { month: 11, day: 26 },
+];
+
+const isHoliday = (date) => {
+  return holidays.some(
+    (holiday) =>
+      holiday.day === date.getDate() &&
+      holiday.month === date.getMonth()
+  );
+};
+
 function Programare() {
   const { user } = useAuth();
   const [doctors, setDoctors] = useState([]);
+  const [doctorAppointments, setDoctorAppointments] = useState([]);
   const location = useLocation();
   const selectedDate = location.state?.selectedDate || "";
 
@@ -37,7 +62,16 @@ function Programare() {
       console.log("Could not fetch doctors from the database");
       throw error;
     }
-  }
+  };
+
+  const fetchDoctorAppointments = async (doctorId, date) => {
+    try {
+      const appointments = await AppointmentService.getAppointmentsForDoctorAndDate(doctorId, date);
+      setDoctorAppointments(appointments);
+    } catch (error) {
+      console.error("Failed to fetch doctor's appointments", error);
+    }
+  };
 
   useEffect(() => {
     fetchDoctors();
@@ -52,6 +86,21 @@ function Programare() {
   });
 
   const handleAppointment = async (values, actions) => {
+    const appointmentDate = new Date(values.date);
+    if (isHoliday(appointmentDate) || appointmentDate.getDay() === 0 || appointmentDate.getDay() === 6) {
+      alert("Clinica este închisă în această dată. Vă rugăm să selectați o altă dată.");
+      return;
+    }
+
+    const conflictingAppointment = doctorAppointments.some(appointment =>
+      appointment.hour === values.hour && appointment.date === values.date
+    );
+
+    if (conflictingAppointment) {
+      alert("Există deja o programare la această oră. Vă rugăm să selectați o altă oră.");
+      return;
+    }
+
     const appointmentDateTime = `${values.date} ${values.hour}:00`;
 
     console.log("form values: ", values);
@@ -71,6 +120,24 @@ function Programare() {
     } catch (error) {
       console.error("Failed to add appointment", error);
       actions.setFieldError("general", "Failed to schedule appointment");
+    }
+  };
+
+  const handleDoctorChange = async (e, props) => {
+    props.handleChange(e);
+    const doctorId = e.target.value;
+    const date = props.values.date;
+    if (doctorId && date) {
+      await fetchDoctorAppointments(doctorId, date);
+    }
+  };
+
+  const handleDateChange = async (e, props) => {
+    props.handleChange(e);
+    const date = e.target.value;
+    const doctorId = props.values.doctor;
+    if (doctorId && date) {
+      await fetchDoctorAppointments(doctorId, date);
     }
   };
 
@@ -161,7 +228,7 @@ function Programare() {
                     id="doctor"
                     name="doctor"
                     value={props.values.doctor}
-                    onChange={props.handleChange}
+                    onChange={(e) => handleDoctorChange(e, props)}
                     error={props.touched.doctor && Boolean(props.errors.doctor)}
                   >
                     {doctors.map((doctor) => (
@@ -197,7 +264,7 @@ function Programare() {
                   type="date"
                   InputProps={{ style: { fontSize: "1.5rem" } }}
                   value={props.values.date}
-                  onChange={props.handleChange}
+                  onChange={(e) => handleDateChange(e, props)}
                   error={props.touched.date && Boolean(props.errors.date)}
                   helperText={props.touched.date && props.errors.date}
                   margin="normal"

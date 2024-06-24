@@ -74,17 +74,17 @@ export const StyledCalendar = styled(Calendar)({
   fontSize: "2rem",
   "& .react-calendar__tile--active": {
     mt: 3,
-    background: "#6f48eb !important",
+    background: "#8e7cc3 !important",
     color: "white !important",
   },
   "& .HONORED": {
-    backgroundColor: "green !important",
+    backgroundColor: "#98fb98 !important",
   },
   "& .UNHONORED": {
-    backgroundColor: "red !important",
+    backgroundColor: "#f08080 !important",
   },
   "& .appointment-future": {
-    backgroundColor: "orange !important",
+    backgroundColor: "#ffa07a !important",
   },
   "& .react-calendar__month-view__days__day": {
     fontSize: "2rem",
@@ -96,18 +96,17 @@ export const StyledCalendar = styled(Calendar)({
     minHeight: "80px",
   },
   "& .UNCONFIRMED": {
-    backgroundColor: "pink !important",
+    backgroundColor: "#ffb6c1 !important",
   },
   "& .CONFIRMED": {
-    backgroundColor: "blue !important",
+    backgroundColor: "#add8e6 !important",
   },
   "& .CANCELED": {
-    backgroundColor: "orange !important",
+    backgroundColor: "#ffcccb !important",
   },
-
   "& .holiday": {
-    backgroundColor: "red !important",
+    backgroundColor: "#ff6961 !important",
     color: "white !important",
   },
-
 });
+

@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import styles from "./mainPages.module.css";
 import AppointmentService from "../services/appointment.service";
 import { useAuth } from "../services/context/AuthContext";
+import {date} from "yup";
+import {format} from "date-fns";
 
 
 const holidays = [
@@ -175,9 +177,27 @@ const Programari = () => {
   };
 
 
-  const handleCancelAppointment = async (appointmentId) => {
+  const getFormattedTime = (dateString) => {
+    const dateObj = new Date(dateString);
+    const options = { hour: '2-digit', minute: '2-digit' };
+    return dateObj.toLocaleTimeString('en-US', options);
+  };
+
+  const handleCancelAppointment = async (appointment) => {
     try {
-      const response = await AppointmentService.updateAppointment(appointmentId, { appointmentType: 'CANCELED' });
+      console.log('Canceling appointment with ID:', appointment.id);
+      console.log('Canceling appointment :', appointment);
+
+
+      // const formattedDate = `${appointment.date.split("T")[0]}`;
+      const formattedDate = format(new Date(appointment.date), 'yyyy-MM-dd HH:mm:ss');
+      const response = await AppointmentService.updateAppointment({
+        ...appointment,
+        doctorId: appointment.doctor.id,
+        appointmentType: 'CANCELED',
+        date: formattedDate,
+      });
+
       if (response) {
         console.log('Appointment canceled successfully');
         if (user.roles[0].name === "role_user") {
@@ -192,11 +212,9 @@ const Programari = () => {
   };
 
 
-  const getFormattedTime = (dateString) => {
-    const dateObj = new Date(dateString);
-    const options = { hour: '2-digit', minute: '2-digit' };
-    return dateObj.toLocaleTimeString('en-US', options);
-  };
+
+
+
 
   return (
     <main className={styles.mainPage}>
@@ -364,16 +382,17 @@ const Programari = () => {
                   </StyledButton>
 
                   <StyledButton
-                    onClick={() => handleCancelAppointment(appointment.id)}
+
+                    onClick={()=>handleCancelAppointment(appointment)}
                     color="secondary"
                     sx={{
-                      fontSize: "1.5rem",
-                      mt: 4,
-                      ml:3
-                    }}
-                  >
+                    fontSize: "1.5rem",
+                    mt: 4,
+                    ml: 3,
+                  }}
+                    >
                     Anuleaza Programare
-                  </StyledButton>
+                </StyledButton>
                 </Box>
               ))}
             </List>

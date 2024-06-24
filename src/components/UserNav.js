@@ -67,8 +67,11 @@ function UserNav() {
   return (
     <nav className={styles.nav}>
       <ul>
-        {user && (user.roles[0].name === "role_admin" || user.roles[0].name === "role_user") && (
+        {user && ( user.roles[0].name === "role_user") && (
           <>
+            <li>
+              <NavLink to="/notite">Notite</NavLink>
+            </li>
             <li>
               <Box sx={{display: "flex", alignItems: "center"}}>
                 <NavLink to="#" onClick={handleOpenDosarMenu}>
@@ -165,14 +168,11 @@ function UserNav() {
                         primary={page}
                       />
                     </MenuItem>
+
                   ))}
                 </Menu>
               </Box>
             </li>
-            <li>
-              <NavLink to="/doctori">Doctori</NavLink>
-            </li>
-
           </>
         )}
         {user && (user.roles[0].name === "role_doctor" || user.roles[0].name==="role_admin") && (
@@ -181,8 +181,17 @@ function UserNav() {
               <NavLink to="/pacienti">Pacienti</NavLink>
             </li>
 
+
+          </>
+        )}
+        {user && (user.roles[0].name === "role_doctor" ) && (
+          <>
+
             <li>
               <NavLink to="/rapoarte">Rapoarte</NavLink>
+            </li>
+            <li>
+              <NavLink to="/notite">Notite</NavLink>
             </li>
           </>
         )}
@@ -191,9 +200,15 @@ function UserNav() {
             <li>
               <NavLink to="/programari">Programari</NavLink>
             </li>
+
+          </>
+        )}
+        {user && (user.roles[0].name==="role_user" || user.roles[0].name==="role_admin") && (
+          <>
             <li>
-              <NavLink to="/notite">Notite</NavLink>
+              <NavLink to="/doctori">Doctori</NavLink>
             </li>
+
           </>
         )}
         <li>

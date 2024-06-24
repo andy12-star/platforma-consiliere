@@ -12,7 +12,6 @@ import UserNav from "../components/UserNav";
 import { StyledButton } from "../components/styledComp";
 import { useNavigate } from "react-router-dom";
 import styles from "./mainPages.module.css";
-import TestService from "../services/test.service";
 
 const questions = [
   {
@@ -64,13 +63,9 @@ const TestPersonalitate = () => {
     setResponses(newResponses);
   };
 
-  const handleSubmit = async () => {
-    try {
-      await TestService.submitTest("personalitate", responses);
-      navigate("/rezultateteste");
-    } catch (error) {
-      console.error("Failed to submit test", error);
-    }
+  const handleSubmit = () => {
+    console.log("Test responses:", responses);
+    navigate("/rezultateteste");
   };
 
   return (
@@ -151,7 +146,6 @@ const TestPersonalitate = () => {
               sx={{
                 mt: 3,
               }}
-
             >
               Submit questions
             </StyledButton>

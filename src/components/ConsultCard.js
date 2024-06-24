@@ -63,20 +63,20 @@ const ConsultCard = (consultation) => {
   return (
     <Card
       sx={{
-        maxWidth: 450,
-        marginBottom: 3,
-        marginTop: 3,
-        borderRadius: 4,
+        maxWidth: 600, // Increased width
+        marginBottom: 4,
+        marginTop: 4,
+        borderRadius: 6,
         boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
       }}
     >
       <CardContent>
         <Box
           sx={{
-            maxWidth: 450,
+            maxWidth: 600, // Increased width
             marginBottom: 3,
             marginTop: 3,
-            height: 120,
+            height: 150, // Increased height
             display: "flex",
             flexDirection: "column",
             bgcolor: "#E1EBEE",
@@ -86,18 +86,18 @@ const ConsultCard = (consultation) => {
         >
           {user.roles[0].name === 'role_user' && (
             <Typography
-              variant="h5"
+              variant="h4" // Increased font size
               alignItems="center"
               sx={{
                 mt: 6,
               }}
             >
-              {consultation.doctorName}
+              Dr. {consultation.doctorName}
             </Typography>
           )}
           {user.roles[0].name === 'role_doctor' && (
             <Typography
-              variant="h5"
+              variant="h4" // Increased font size
               alignItems="center"
               sx={{
                 mt: 6,
@@ -108,11 +108,11 @@ const ConsultCard = (consultation) => {
           )}
         </Box>
         <Box marginTop={2}>
-          <Typography variant="h5" color="text.secondary">
+          <Typography variant="h4" color="text.secondary"> {/* Increased font size */}
             DATA SI ORA CONSULTATIEI
           </Typography>
-          <Typography variant="h6">{consultation.date.split("T")[0]}</Typography>
-          <Typography variant="h6">{getFormattedTime(consultation.date)}</Typography>
+          <Typography variant="h5">{consultation.date.split("T")[0]}</Typography> {/* Increased font size */}
+          <Typography variant="h5">{getFormattedTime(consultation.date)}</Typography> {/* Increased font size */}
         </Box>
         <StyledButton
           fullWidth
@@ -121,7 +121,7 @@ const ConsultCard = (consultation) => {
           sx={{
             marginTop: 4,
             textTransform: "none",
-            fontSize: "18px",
+            fontSize: "20px", // Increased font size
           }}
         >
           VEZI DETALII RAPORT
@@ -208,7 +208,7 @@ const ConsultCard = (consultation) => {
                   margin="normal"
                 />
               ) : (
-                <Typography variant="h4">{consultation.duration}</Typography>
+                <Typography variant="h4">{consultationData.duration}</Typography>
               )}
               <Divider />
               <Box sx={{ my: 2 }} />
@@ -225,7 +225,7 @@ const ConsultCard = (consultation) => {
               {editMode ? (
                 <TextField
                   fullWidth
-                  name="observation"
+                  name="observations"
                   value={consultationData.observations}
                   onChange={handleInputChange}
                   InputLabelProps={{ style: { fontSize: "1.5rem" } }}
@@ -233,7 +233,7 @@ const ConsultCard = (consultation) => {
                   margin="normal"
                 />
               ) : (
-                <Typography variant="h4">{consultation.observations}</Typography>
+                <Typography variant="h4">{consultationData.observations}</Typography>
               )}
               <Divider />
               <Box sx={{ my: 2 }} />
@@ -250,7 +250,7 @@ const ConsultCard = (consultation) => {
               {editMode ? (
                 <TextField
                   fullWidth
-                  name="recommendation"
+                  name="recommendations"
                   value={consultationData.recommendations}
                   onChange={handleInputChange}
                   InputLabelProps={{ style: { fontSize: "1.5rem" } }}
@@ -258,7 +258,7 @@ const ConsultCard = (consultation) => {
                   margin="normal"
                 />
               ) : (
-                <Typography variant="h4">{consultation.recommendations}</Typography>
+                <Typography variant="h4">{consultationData.recommendations}</Typography>
               )}
               <Divider />
             </Box>
@@ -312,9 +312,7 @@ const ConsultCard = (consultation) => {
               sx={{
                 mr: 4,
                 mt: 3,
-                fontSize: "1.5rem",
-              }}
-            >
+                fontSize: "1.5rem"                  }}>
               Inchide
             </StyledButton>
 
@@ -326,3 +324,4 @@ const ConsultCard = (consultation) => {
 };
 
 export default ConsultCard;
+

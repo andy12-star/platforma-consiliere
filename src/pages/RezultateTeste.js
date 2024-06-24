@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Container, Typography, Box } from "@mui/material";
 import UserNav from "../components/UserNav";
 import Chart from "../components/Chart";
-import TestService from "../services/test.service";
 import styles from "./mainPages.module.css";
 
 const getMean = (responses) => {
@@ -12,33 +11,33 @@ const getMean = (responses) => {
 
 const interpretPersonalitateMean = (mean) => {
   if (mean >= 1 && mean < 1.5)
-    return "It suggests that you are a highly sociable, empathetic, and organized individual with a strong sense of curiosity and emotional stability";
+    return "Aceasta sugerează că sunteți o persoană extrem de sociabilă, empatică și organizată, cu un puternic sentiment de curiozitate și stabilitate emoțională";
   if (mean >= 1.5 && mean < 2.5)
-    return "You are moderately sociable and curious, enjoying social interactions and exploring new topics to a reasonable extent. You have a fair amount of empathy and can relate to others' emotions, though not as intensely.";
+    return "Sunteți moderat sociabil și curios, vă bucurați de interacțiunile sociale și explorați subiecte noi într-o măsură rezonabilă. Aveți o bună empatie și vă puteți raporta la emoțiile altora, deși nu la fel de intens.";
   if (mean >= 2.5 && mean < 3.5)
-    return "You are sentimental, use organizational tools, and learn from your mistakes. You feel confident and comfortable initiating conversations with interesting people.";
+    return "Ești sentimental, folosești instrumente organizaționale și înveți din greșelile tale. Te simți încrezător și confortabil în inițierea conversațiilor cu oameni interesanți.";
   if (mean >= 3.5 && mean < 4.5)
-    return "You exhibit a balanced personality. You value organization, learn from mistakes, and are confident in social interactions.";
+    return "Dai dovadă de o personalitate echilibrată. Apreciezi organizarea, înveți din greșeli și ai încredere în interacțiunile sociale.";
   if (mean >= 4.5 && mean < 5.5)
-    return "You are introverted, prefer stability, and avoid new social connections. You tend to be content with known subjects, maintain emotional distance.";
+    return "Sunteți introvertit, preferați stabilitatea și evitați noile conexiuni sociale. Ai tendința să te mulțumești cu subiectele cunoscute, să menții distanța emoțională.";
   if (mean >= 5.5 && mean <= 6)
-    return "You are highly introverted, dislike social interactions, and avoid new experiences. You are emotionally detached, disorganized, and easily stressed. You lack confidence and often doubt your abilities.";
+    return "Sunteți foarte introvertit, nu vă plac interacțiunile sociale și evitați experiențe noi. Ești detașat emoțional, dezorganizat și ușor de stresat. Îți lipsește încrederea și te îndoiești adesea de abilitățile tale.";
   return "Testul nu a fost completat.";
 };
 
 const interpretSMIMean = (mean) => {
   if (mean >= 1 && mean < 1.5)
-    return "You are likely to feel deeply connected to your emotions and experiences, often experiencing intense feelings. However, this strong emotional connection might make you prone to struggles with self-esteem and impulse control.";
+    return "Este posibil să vă simțiți profund conectat la emoțiile și experiențele voastre, trăind adesea sentimente intense. Cu toate acestea, această conexiune emoțională puternică te poate face predispus la lupte cu stima de sine și controlul impulsurilor.";
   if (mean >= 1.5 && mean < 2.5)
-    return "You likely have a deep-seated need for acceptance and validation, which can sometimes lead to challenges in managing self-worth and interpersonal relationships.";
+    return "Probabil că aveți o nevoie profundă de acceptare și validare, ceea ce poate duce uneori la provocări în gestionarea valorii de sine și a relațiilor interpersonale.";
   if (mean >= 2.5 && mean < 3.5)
-    return "You likely experience a healthy mix of emotional highs and lows, with occasional struggles related to self-esteem and interpersonal dynamics. You are self-aware and reflective, often able to understand and articulate your feelings.";
+    return "Probabil că veți experimenta un amestec sănătos de înalte și scăzute emoționale, cu lupte ocazionale legate de stima de sine și dinamica interpersonală. Sunteți conștient de sine și reflexiv, adesea capabil să înțelegeți și să vă exprimați sentimentele.";
   if (mean >= 3.5 && mean < 4.5)
-    return "You likely find it easy to adapt to various situations without being overly swayed by your emotions. While you maintain a balance between your internal experiences and external interactions, there might be times when deeper emotional issues are not fully addressed.";
+    return "Probabil că îți este ușor să te adaptezi la diverse situații fără a fi prea influențat de emoțiile tale. În timp ce mențineți un echilibru între experiențele voastre interne și interacțiunile externe, pot exista momente în care problemele emoționale mai profunde nu sunt abordate pe deplin.";
   if (mean >= 4.5 && mean < 5.5)
-    return "You might find it easier to manage your emotions and maintain self-control, often appearing calm and collected even in stressful situations. However, this could also indicate a tendency to suppress feelings or avoid dealing with emotional issues.";
+    return "S-ar putea să vă fie mai ușor să vă gestionați emoțiile și să vă mențineți autocontrolul, părând adesea calm și liniștit chiar și în situații stresante. Cu toate acestea, acest lucru ar putea indica, de asemenea, o tendință de a suprima sentimentele sau de a evita de a face față problemelor emoționale.";
   if (mean >= 5.5 && mean <= 6)
-    return "You likely have a robust sense of self-worth and find it easy to navigate interpersonal relationships without being overly influenced by emotions. This strong independence and self-confidence mean you are well-equipped to handle life's challenges.";
+    return "Probabil că aveți un sentiment puternic al valorii de sine și vă este ușor să navigați în relațiile interpersonale fără a fi prea influențat de emoții. Această independență puternică și încredere în tine înseamnă că ești bine echipat pentru a face față provocărilor vieții.";
   return "Testul nu a fost completat.";
 };
 
@@ -46,7 +45,7 @@ const calculateYSQScores = (responses) => {
   const categories = {
     "Privatiune Emotionala": [1, 2, 3],
     Instabilitate: [4, 5, 6],
-    "Neincredere/Abuz": [7, 8, 9],
+    "Neincredere": [7, 8, 9],
   };
 
   const scores = [];
@@ -64,31 +63,10 @@ const calculateYSQScores = (responses) => {
 };
 
 const RezultateTest = () => {
-  const [personalitateResponses, setPersonalitateResponses] = useState([]);
-  const [smiResponses, setSmiResponses] = useState([]);
-  const [ysqResponses, setYsqResponses] = useState([]);
-  const [ysqScores, setYsqScores] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const personalitateData = await TestService.getTestResults(
-          "personalitate"
-        );
-        const smiData = await TestService.getTestResults("smi");
-        const ysqData = await TestService.getTestResults("ysq");
-
-        setPersonalitateResponses(personalitateData.responses);
-        setSmiResponses(smiData.responses);
-        setYsqResponses(ysqData.responses);
-        setYsqScores(calculateYSQScores(ysqData.responses));
-      } catch (error) {
-        console.error("Failed to fetch test results", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [personalitateResponses, setPersonalitateResponses] = useState([1, 2, 3, 4, 5, 6]);
+  const [smiResponses, setSmiResponses] = useState([2, 3, 4, 5, 6, 1]);
+  const [ysqResponses, setYsqResponses] = useState([3, 4, 5, 6, 1, 2, 3, 4, 5]);
+  const [ysqScores, setYsqScores] = useState(calculateYSQScores([3, 4, 5, 6, 1, 2, 3, 4, 5]));
 
   const personalitateMean = getMean(personalitateResponses);
   const smiMean = getMean(smiResponses);

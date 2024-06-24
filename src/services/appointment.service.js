@@ -41,12 +41,23 @@ class AppointmentService {
     }
   }
 
-  async updateAppointment( appointment){
-    try{
-      const response = await axiosInstance.put('/appointment/'+appointment.id,appointment);
+  async updateAppointment(appointment) {
+    try {
+      const response = await axiosInstance.put('/appointment/' + appointment.id, appointment);
       return response.data;
-    }catch(error){
-      console.error("Updating appointment failed",error);
+    } catch (error) {
+      console.error("Updating appointment failed", error);
+      throw error;
+    }
+  }
+
+
+  async getAppointmentsForDoctorAndDate(doctorId, date) {
+    try {
+      const response = await axiosInstance.get('/appointments/doctor/' + doctorId + '/date/' + date);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch appointments for doctor and date", error);
       throw error;
     }
   }
