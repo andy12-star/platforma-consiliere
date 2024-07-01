@@ -12,11 +12,13 @@ import UserNav from "../components/UserNav";
 import { StyledButton } from "../components/styledComp";
 import { useNavigate } from "react-router-dom";
 import styles from "./mainPages.module.css";
+import { useAuth } from "../services/context/AuthContext";
+import TestService from "../services/test.service";
 
 const questions = [
   {
     number: 1,
-    text: "In general nu am avut pe cineva care sa aiba grija de mine, caruia sa-l impartasesc din viata mea sau caruia sa-i pese mult de ce se intampla cu mine.",
+    text: "In general nu am avut pe cineva care sa aiba grija de mine, caruia sa-i impartasesc din viata mea sau caruia sa-i pese mult de ce se intampla cu mine.",
   },
   {
     number: 2,
@@ -42,21 +44,14 @@ const questions = [
   { number: 8, text: "Daca fac o greseala, merit sa fiu pedepsit/a." },
   {
     number: 9,
-    text: "In majoritatea activitatilor scolare sau de serviciu nu sunt la del de bun ca si ceilalti.",
-  },
-  {
-    number: 10,
-    text: "Nu ma simt in stare sa ma descurc singur/a in viata de zi cu zi.",
-  },
-  {
-    number: 11,
-    text: "Nu pot scapa de sentimentul ca ceva rau e pe cale sa se intample.",
+    text: "In majoritatea activitatilor scolare sau de serviciu nu sunt la fel de bun ca si ceilalti.",
   },
 ];
 
 const TestYSQ = () => {
   const [responses, setResponses] = useState(Array(questions.length).fill(0));
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleResponseChange = (questionNumber, value) => {
     const newResponses = [...responses];
@@ -64,9 +59,14 @@ const TestYSQ = () => {
     setResponses(newResponses);
   };
 
-  const handleSubmit = () => {
-    console.log("Test responses:", responses);
-    navigate("/rezultateteste");
+  const handleSubmit = async () => {
+    try {
+      await TestService.saveTestResults(responses, user.id, "ysq");
+      console.log("Test responses saved:", responses);
+      navigate("/rezultateteste/"+user.id);
+    } catch (error) {
+      console.error("Failed to save test results:", error);
+    }
   };
 
   return (

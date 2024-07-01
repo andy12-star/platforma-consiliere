@@ -84,7 +84,7 @@ const ConsultCard = (consultation) => {
             boxShadow: "0 4px 4px rgba(0, 0, 0, 0.2)",
           }}
         >
-          {user.roles[0].name === 'role_user' && (
+          {user.roles[0].name === 'role_user'  && (
             <Typography
               variant="h4" // Increased font size
               alignItems="center"
@@ -95,7 +95,21 @@ const ConsultCard = (consultation) => {
               Dr. {consultation.doctorName}
             </Typography>
           )}
-          {user.roles[0].name === 'role_doctor' && (
+          { user.roles[0].name === 'role_admin' && (
+            <div>
+              <Typography
+                variant="h4" // Increased font size
+                alignItems="center"
+                sx={{
+                  mt: 8,
+                }}
+              >
+                Dr. {consultation.doctorName} & {consultation.patientName}
+              </Typography>
+
+            </div>
+          )}
+          {user.roles[0].name === 'role_doctor'  && (
             <Typography
               variant="h4" // Increased font size
               alignItems="center"

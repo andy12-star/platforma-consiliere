@@ -44,13 +44,6 @@ export const StyledTextField = styled(TextField)({
   },
 });
 
-export const Button2 = styled(Button)({
-  color: "#120a8f",
-  backgroundColor: "#e1ebee",
-  "&:hover": {
-    backgroundColor: "#B9D9EB",
-  },
-});
 
 export const StyledButton = styled(Button)({
   borderColor: "#15171c",

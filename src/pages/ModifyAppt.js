@@ -210,7 +210,7 @@ return (
                 <>
                   <FormControl fullWidth margin="normal">
                     <InputLabel id="appointmentType">
-                      Specializare
+                      STATUS
                     </InputLabel>
                     <Field
                       as={Select}

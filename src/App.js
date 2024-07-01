@@ -48,7 +48,7 @@ function App() {
             <Route path="testsmi" element={<ProtectedRoute><TestSMI/></ProtectedRoute>}/>
             <Route path="testysq" element={<ProtectedRoute><TestYSQ/></ProtectedRoute>}/>
             <Route path="testpersonalitate" element={<ProtectedRoute><TestPersonalitate/></ProtectedRoute>}/>
-            <Route path="rezultateteste" element={<ProtectedRoute><RezultateTeste/></ProtectedRoute>}/>
+            <Route path="rezultateteste/:id" element={<ProtectedRoute><RezultateTeste/></ProtectedRoute>}/>
             <Route path="notite" element={<ProtectedRoute><Notite/></ProtectedRoute>}/>
             <Route path="profil" element={<ProtectedRoute><Profil/></ProtectedRoute>}/>
             <Route path="doctori" element={<ProtectedRoute><Doctori/></ProtectedRoute>}/>

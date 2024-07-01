@@ -12,6 +12,8 @@ import UserNav from "../components/UserNav";
 import { StyledButton } from "../components/styledComp";
 import { useNavigate } from "react-router-dom";
 import styles from "./mainPages.module.css";
+import { useAuth } from "../services/context/AuthContext";
+import TestService from "../services/test.service";
 
 const questions = [
   {
@@ -48,6 +50,7 @@ const questions = [
 const TestSMI = () => {
   const [responses, setResponses] = useState(Array(questions.length).fill(0));
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleResponseChange = (questionNumber, value) => {
     const newResponses = [...responses];
@@ -55,9 +58,13 @@ const TestSMI = () => {
     setResponses(newResponses);
   };
 
-  const handleSubmit = () => {
-    console.log("Test responses:", responses);
-    navigate("/rezultateteste");
+  const handleSubmit = async () => {
+    try {
+      await TestService.saveTestResults(responses, user.id, "smi");
+      console.log("Test responses saved:", responses);
+      navigate("/rezultateteste/"+user.id);    } catch (error) {
+      console.error("Failed to save test results:", error);
+    }
   };
 
   return (

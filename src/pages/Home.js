@@ -13,7 +13,7 @@ export default function Home() {
               fontFamily: "Times New Roman, Times, serif",
             }}
           >
-            Welcome to therapy!
+            Bine ai venit la consiliere!
           </h1>
         </container>
       </section>

@@ -3,11 +3,9 @@ import { Container, Typography, Box } from "@mui/material";
 import UserNav from "../components/UserNav";
 import Chart from "../components/Chart";
 import styles from "./mainPages.module.css";
+import { useAuth } from "../services/context/AuthContext";
+import TestService from "../services/test.service";
 
-const getMean = (responses) => {
-  const sum = responses.reduce((acc, val) => acc + val, 0);
-  return sum / responses.length;
-};
 
 const interpretPersonalitateMean = (mean) => {
   if (mean >= 1 && mean < 1.5)
@@ -44,36 +42,42 @@ const interpretSMIMean = (mean) => {
 const calculateYSQScores = (responses) => {
   const categories = {
     "Privatiune Emotionala": [1, 2, 3],
-    Instabilitate: [4, 5, 6],
+    "Instabilitate": [4, 5, 6],
     "Neincredere": [7, 8, 9],
   };
 
   const scores = [];
-
-  for (const category in categories) {
-    const questionIndices = categories[category];
-    const totalScore = questionIndices.reduce(
-      (sum, index) => sum + responses[index - 1],
-      0
-    );
-    scores.push({ name: category, Notă: totalScore, Prag: 8 });
-  }
+  console.log(responses);
+  scores.push({ name: "Privatiune Emotionala", Notă: responses.ysqEmotionalPrivacy, Prag: 8 });
+  scores.push({ name: "Instabilitate", Notă: responses.ysqInstability, Prag: 8 });
+  scores.push({ name: "Neincredere", Notă: responses.ysqDoubt, Prag: 8 });
 
   return scores;
 };
 
 const RezultateTest = () => {
-  const [personalitateResponses, setPersonalitateResponses] = useState([1, 2, 3, 4, 5, 6]);
-  const [smiResponses, setSmiResponses] = useState([2, 3, 4, 5, 6, 1]);
-  const [ysqResponses, setYsqResponses] = useState([3, 4, 5, 6, 1, 2, 3, 4, 5]);
-  const [ysqScores, setYsqScores] = useState(calculateYSQScores([3, 4, 5, 6, 1, 2, 3, 4, 5]));
+  const [personalitateResponses, setPersonalitateResponses] = useState([]);
+  const [smiResponses, setSmiResponses] = useState([]);
+  const [ysqScores, setYsqScores] = useState([]);
+  const { user } = useAuth();
 
-  const personalitateMean = getMean(personalitateResponses);
-  const smiMean = getMean(smiResponses);
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const data = await TestService.getTestResultsForPatient(user.id);
+        setPersonalitateResponses(data.personality);
+        setSmiResponses(data.smi );
+        setYsqScores(calculateYSQScores(data));
+      } catch (error) {
+        console.error("Failed to fetch test results", error);
+      }
+    };
 
-  const personalitateInterpretation =
-    interpretPersonalitateMean(personalitateMean);
-  const smiInterpretation = interpretSMIMean(smiMean);
+    fetchResults();
+  }, [user.id]);
+
+  const personalitateInterpretation = interpretPersonalitateMean(personalitateResponses);
+   const smiInterpretation = interpretSMIMean(smiResponses);
 
   return (
     <main className={styles.mainPage}>
@@ -147,7 +151,7 @@ const RezultateTest = () => {
 
             <Box sx={{ width: "100%", mt: 4 }}>
               <Typography
-                textAlign="left"
+                textAlign="center"
                 variant="h4"
                 gutterBottom
                 sx={{

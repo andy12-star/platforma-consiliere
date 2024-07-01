@@ -19,20 +19,21 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useAuth } from "../services/context/AuthContext";
 
-const dosarMedicalPages = ["RapoarteConsultatie", "RezultateTeste"];
-const testPages = ["Test personalitate", "Test SMI", "Test YSQ"];
 
 function UserNav() {
   const navigate = useNavigate();
   const [anchorElDosar, setAnchorElDosar] = useState(null);
   const [anchorElTest, setAnchorElTest] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const { user, logout } = useAuth();
+
+  const dosarMedicalPages = ["RapoarteConsultatie", `RezultateTeste/${user.id}`];
+  const testPages = ["Test personalitate", "Test SMI", "Test YSQ"];
 
   const handleNavItemClick = (page) => {
     navigate(`/${page.toLowerCase().replace(" ", "")}`);
   };
 
-  const { user, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
